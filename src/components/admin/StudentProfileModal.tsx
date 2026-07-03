@@ -217,6 +217,9 @@ export const StudentProfileModal = ({ folderNumber, onClose, startInPrintMode }:
                     <Field label="First Graduate" value={firstYearData.first_graduate} />
                     <Field label="First Graduate Cert. No." value={firstYearData.first_graduate_certificate_number} />
                     <Field label="EMIS Number" value={firstYearData.emis_number} />
+                    <Field label="District" value={firstYearData.district} />
+                    <Field label="Block" value={firstYearData.block} />
+                    <Field label="School" value={firstYearData.school} />
                   </div>
                 </div>
 

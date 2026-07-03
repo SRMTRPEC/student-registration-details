@@ -136,6 +136,9 @@ export const AdminDashboard = () => {
           "First Graduate": fyd.first_graduate,
           "First Graduate Cert No.": fyd.first_graduate_certificate_number,
           "EMIS Number": fyd.emis_number,
+          "District": fyd.district,
+          "Block": fyd.block,
+          "School": fyd.school,
           "Date of Doc Submission": fyd.date_of_document_submission
         };
       });

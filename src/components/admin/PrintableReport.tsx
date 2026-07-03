@@ -89,6 +89,9 @@ export const PrintableReport = ({ basicData, firstYearData, documentsData }: Pri
           <div><strong className="text-gray-700">First Grad Cert No:</strong> {firstYearData?.first_graduate_certificate_number || '-'}</div>
           
           <div><strong className="text-gray-700">EMIS Number:</strong> {firstYearData?.emis_number || '-'}</div>
+          <div><strong className="text-gray-700">District:</strong> {firstYearData?.district || '-'}</div>
+          <div><strong className="text-gray-700">Block:</strong> {firstYearData?.block || '-'}</div>
+          <div className="col-span-2"><strong className="text-gray-700">School:</strong> {firstYearData?.school || '-'}</div>
           <div><strong className="text-gray-700">Blood Group:</strong> {firstYearData?.blood_group || '-'}</div>
           <div><strong className="text-gray-700">Mother Tongue:</strong> {firstYearData?.mother_tongue || '-'}</div>
         </div>
