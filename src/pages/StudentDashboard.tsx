@@ -9,7 +9,6 @@ import { supabase } from '../supabase/client';
 export const StudentDashboard = () => {
   const navigate = useNavigate();
   const [folderNumber, setFolderNumber] = useState<string | null>(null);
-  const [form1Status, setForm1Status] = useState<'Not Started' | 'Pending' | 'Completed'>('Not Started');
   const [form2Status, setForm2Status] = useState<'Not Started' | 'Pending' | 'Completed'>('Not Started');
   const [form3Status, setForm3Status] = useState<'Not Started' | 'Pending' | 'Completed'>('Not Started');
 
@@ -26,9 +25,6 @@ export const StudentDashboard = () => {
       if (!isConfigured) return; // In mock mode, we just leave them as Not Started for visual demo
 
       try {
-        const { data: bData } = await supabase.from('student_basic_details').select('status').eq('folder_number', fn).single();
-        if (bData) setForm1Status(bData.status === 'submitted' ? 'Completed' : 'Pending');
-
         const { data: fData } = await supabase.from('first_year_data').select('status').eq('folder_number', fn).single();
         if (fData) setForm2Status(fData.status === 'submitted' ? 'Completed' : 'Pending');
 
@@ -68,33 +64,6 @@ export const StudentDashboard = () => {
       </motion.div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        {/* Form 1 Card */}
-        <Card className="flex flex-col">
-          <div className="flex items-start justify-between mb-6">
-            <div className="w-12 h-12 bg-primary/20 text-primary rounded-xl flex items-center justify-center">
-              <FileText className="w-6 h-6" />
-            </div>
-            <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${
-              form1Status === 'Completed' ? 'bg-green-500/10 text-green-500 border-green-500/20' : 
-              form1Status === 'Pending' ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' : 
-              'bg-white/5 text-text-secondary border-white/10'
-            }`}>
-              {form1Status === 'Completed' ? <CheckCircle className="w-3.5 h-3.5" /> : form1Status === 'Pending' ? <Clock className="w-3.5 h-3.5" /> : null} 
-              {form1Status}
-            </div>
-          </div>
-          
-          <h3 className="text-xl font-bold mb-2">Student Basic Details</h3>
-          <p className="text-sm text-text-secondary mb-8 flex-1">
-            Required module. Fill out your basic academic and personal information to initiate your college registration profile.
-          </p>
-          
-          <Button onClick={() => navigate('/form/basic-details')} className="w-full group">
-            {form1Status === 'Completed' ? 'Edit Form' : 'Start Form'}
-            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-          </Button>
-        </Card>
-
         {/* Form 2 Card */}
         <Card className="flex flex-col">
           <div className="flex items-start justify-between mb-6">
@@ -113,7 +82,7 @@ export const StudentDashboard = () => {
           
           <h3 className="text-xl font-bold mb-2">First Year Data 2026-27</h3>
           <p className="text-sm text-text-secondary mb-8 flex-1">
-            Detailed module for first-year students including family, community, and income details. Requires Form 1 completion.
+            Required module for first-year students including personal, family, community, and income details.
           </p>
           
           <Button onClick={() => navigate('/form/first-year-data')} className="w-full group">

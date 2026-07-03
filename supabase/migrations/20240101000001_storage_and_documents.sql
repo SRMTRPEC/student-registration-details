@@ -1,7 +1,7 @@
 -- 1. Create a table to track uploaded documents
 CREATE TABLE IF NOT EXISTS public.student_documents (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  folder_number TEXT NOT NULL REFERENCES public.student_basic_details(folder_number) ON DELETE CASCADE,
+  folder_number TEXT NOT NULL REFERENCES public.first_year_data(folder_number) ON DELETE CASCADE,
   document_type TEXT NOT NULL,
   document_name TEXT NOT NULL,
   file_url TEXT NOT NULL,

@@ -38,21 +38,21 @@ export const AdminDashboard = () => {
     }
 
     try {
-      const { data: basicDetails } = await supabase.from('student_basic_details').select('*');
+      const { data: firstYearData } = await supabase.from('first_year_data').select('*');
 
-      if (basicDetails) {
-        setStudents(basicDetails);
+      if (firstYearData) {
+        setStudents(firstYearData);
         
-        const completed = basicDetails.filter(s => s.status === 'submitted').length;
-        const pending = basicDetails.filter(s => s.status === 'draft').length;
-        const today = basicDetails.filter(s => {
+        const completed = firstYearData.filter(s => s.status === 'submitted').length;
+        const pending = firstYearData.filter(s => s.status === 'draft').length;
+        const today = firstYearData.filter(s => {
           const date = new Date(s.created_at);
           const todayDate = new Date();
           return date.toDateString() === todayDate.toDateString();
         }).length;
 
         setStats({
-          total: basicDetails.length,
+          total: firstYearData.length,
           completed,
           pending,
           today
@@ -72,7 +72,7 @@ export const AdminDashboard = () => {
 
     try {
       const { error } = await supabase
-        .from('student_basic_details')
+        .from('first_year_data')
         .delete()
         .eq('folder_number', folderNumber);
 
@@ -94,23 +94,19 @@ export const AdminDashboard = () => {
   const generateExportData = async () => {
     setIsExporting(true);
     try {
-      const { data: basicData } = await supabase.from('student_basic_details').select('*');
       const { data: fydData } = await supabase.from('first_year_data').select('*');
       
-      if (!basicData) return [];
+      if (!fydData) return [];
 
-      return basicData.map(basic => {
-        const fyd = (fydData || []).find(f => f.folder_number === basic.folder_number) || {};
+      return fydData.map(fyd => {
         
         // Exclude system fields for a cleaner export
-        const { id: _id1, created_at: _ca1, updated_at: _ua1, status: _s1, ...cleanBasic } = basic;
         const { id: _id2, created_at: _ca2, updated_at: _ua2, status: _s2, folder_number: _fn, ...cleanFyd } = fyd;
 
         return {
-          "Folder Number": basic.folder_number,
-          "Status": basic.status,
-          "Registration Date": new Date(basic.created_at).toLocaleString(),
-          ...cleanBasic,
+          "Folder Number": fyd.folder_number,
+          "Status": fyd.status,
+          "Registration Date": new Date(fyd.created_at).toLocaleString(),
           ...cleanFyd
         };
       });

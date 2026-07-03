@@ -27,6 +27,8 @@ export const FirstYearDataForm = () => {
   });
 
   const firstGraduate = watch('first_graduate');
+  const gender = watch('gender');
+  const community = watch('community');
 
   // Load draft data on mount
   useEffect(() => {
@@ -54,19 +56,6 @@ export const FirstYearDataForm = () => {
              setValue(key, data[key] || '');
           }
         });
-      } else {
-        // Pre-fill from Form 1 if available
-        const { data: basicData } = await supabase
-          .from('student_basic_details')
-          .select('*')
-          .eq('folder_number', fn)
-          .single();
-          
-        if (basicData) {
-          setValue('student_name', basicData.student_name);
-          setValue('programme', basicData.programme);
-          // ... other prefill fields omitted for brevity
-        }
       }
     };
     loadDraft();
@@ -75,9 +64,11 @@ export const FirstYearDataForm = () => {
   const handleNext = async () => {
     let fieldsToValidate: any[] = [];
     if (currentStep === 0) {
-      fieldsToValidate = ['student_name', 'programme', 'course', 'admission_category', 'application_number', 'mobile_number', 'alternative_number', 'email_id', 'dob', 'gender', 'blood_group', 'mother_tongue', 'aadhaar_number'];
+      fieldsToValidate = ['email', 'student_name', 'programme', 'course', 'admission_category', 'application_number', 'mobile_number', 'alternative_number', 'email_id', 'dob', 'gender', 'blood_group', 'mother_tongue', 'aadhaar_number', ...(gender === 'Other' ? ['gender_other'] : [])];
     } else if (currentStep === 1) {
-      fieldsToValidate = ['father_name', 'father_mobile', 'mother_name', 'mother_mobile', 'single_parent', 'parents_occupation'];
+      fieldsToValidate = ['father_name', 'father_mobile', 'father_occupation', 'mother_name', 'mother_mobile', 'mother_occupation', 'single_parent'];
+    } else if (currentStep === 2) {
+      fieldsToValidate = ['religion', 'community', 'caste_name', 'community_certificate_number', 'annual_income', 'first_graduate', 'emis_number', 'date_of_document_submission', ...(community === 'Other' ? ['community_other'] : [])];
     }
     
     const isStepValid = await trigger(fieldsToValidate);
@@ -191,6 +182,9 @@ export const FirstYearDataForm = () => {
             >
               {currentStep === 0 && (
                 <div className="grid md:grid-cols-2 gap-6">
+                  <Input label="Folder Number" value={folderNumber || ''} readOnly className="md:col-span-2 bg-white/5 cursor-not-allowed text-text-secondary" />
+                  
+                  <Input label="Primary Email Address" type="email" {...register('email')} error={errors.email?.message} required className="md:col-span-2" />
                   <Input label="Student Name" {...register('student_name')} error={errors.student_name?.message} required className="md:col-span-2" />
                   
                   <Select label="Programme" {...register('programme')} error={errors.programme?.message} required options={[{ value: 'BE & B.Tech', label: 'BE & B.Tech' }, { value: 'M.E', label: 'M.E' }, { value: 'MBA', label: 'MBA' }]} />
@@ -207,11 +201,15 @@ export const FirstYearDataForm = () => {
                   <Input label="Mobile Number" type="tel" maxLength={10} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('mobile_number')} error={errors.mobile_number?.message} required />
                   <Input label="Alternative Number" type="tel" maxLength={10} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('alternative_number')} error={errors.alternative_number?.message} />
                   
-                  <Input label="Email ID" type="email" {...register('email_id')} error={errors.email_id?.message} required className="md:col-span-2" />
+                  <Input label="Alternate Email" type="email" {...register('email_id')} error={errors.email_id?.message} className="md:col-span-2" />
                   
                   <Input label="Date of Birth" type="date" {...register('dob')} error={errors.dob?.message} required />
                   <Select label="Gender" {...register('gender')} error={errors.gender?.message} required options={[{ value: 'Male', label: 'Male' }, { value: 'Female', label: 'Female' }, { value: 'Other', label: 'Other' }]} />
                   
+                  {gender === 'Other' && (
+                    <Input label="Specify Gender" {...register('gender_other')} error={errors.gender_other?.message} required className="md:col-span-2" />
+                  )}
+
                   <Select label="Blood Group" {...register('blood_group')} error={errors.blood_group?.message} required options={['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map(bg => ({value: bg, label: bg}))} />
                   <Input label="Mother Tongue" {...register('mother_tongue')} error={errors.mother_tongue?.message} required />
                   
@@ -227,8 +225,10 @@ export const FirstYearDataForm = () => {
                   <Input label="Mother Name" {...register('mother_name')} error={errors.mother_name?.message} required />
                   <Input label="Mother's Mobile Number" type="tel" maxLength={10} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('mother_mobile')} error={errors.mother_mobile?.message} required />
                   
-                  <Select label="Single Parent" {...register('single_parent')} error={errors.single_parent?.message} required options={[{ value: 'Yes', label: 'Yes' }, { value: 'No', label: 'No' }]} />
-                  <Input label="Parents Occupation" {...register('parents_occupation')} error={errors.parents_occupation?.message} required />
+                  <Input label="Father's Occupation" {...register('father_occupation')} error={errors.father_occupation?.message} required />
+                  <Input label="Mother's Occupation" {...register('mother_occupation')} error={errors.mother_occupation?.message} required />
+                  
+                  <Select label="Single Parent" {...register('single_parent')} error={errors.single_parent?.message} required options={[{ value: 'Yes', label: 'Yes' }, { value: 'No', label: 'No' }]} className="md:col-span-2" />
                 </div>
               )}
 
@@ -237,6 +237,10 @@ export const FirstYearDataForm = () => {
                   <Input label="Religion" {...register('religion')} error={errors.religion?.message} required />
                   <Select label="Community" {...register('community')} error={errors.community?.message} required options={['OC', 'BC', 'BCM', 'MBC/DNC', 'SC', 'SCA', 'ST', 'Other'].map(c => ({value: c, label: c}))} />
                   
+                  {community === 'Other' && (
+                    <Input label="Specify Community" {...register('community_other')} error={errors.community_other?.message} required className="md:col-span-2" />
+                  )}
+
                   <Input label="Caste Name" {...register('caste_name')} error={errors.caste_name?.message} required />
                   <Input label="Community Certificate Number" placeholder="TN-XXXX" {...register('community_certificate_number')} error={errors.community_certificate_number?.message} required />
                   
@@ -248,7 +252,8 @@ export const FirstYearDataForm = () => {
                     <Input label="First Graduate Certificate Number" {...register('first_graduate_certificate_number')} error={errors.first_graduate_certificate_number?.message} required />
                   )}
                   
-                  <Input label="EMIS Number" {...register('emis_number')} error={errors.emis_number?.message} required className="md:col-span-2" />
+                  <Input label="EMIS Number" {...register('emis_number')} error={errors.emis_number?.message} required />
+                  <Input label="Date of Document Submission" type="date" {...register('date_of_document_submission')} error={errors.date_of_document_submission?.message} required />
                 </div>
               )}
             </motion.div>
