@@ -99,15 +99,43 @@ export const AdminDashboard = () => {
       if (!fydData) return [];
 
       return fydData.map(fyd => {
-        
-        // Exclude system fields for a cleaner export
-        const { id: _id2, created_at: _ca2, updated_at: _ua2, status: _s2, folder_number: _fn, ...cleanFyd } = fyd;
-
         return {
           "Folder Number": fyd.folder_number,
           "Status": fyd.status,
           "Registration Date": new Date(fyd.created_at).toLocaleString(),
-          ...cleanFyd
+          "Email": fyd.email,
+          "Student Name": fyd.student_name,
+          "Programme": fyd.programme,
+          "Course": fyd.course,
+          "Admission Category": fyd.admission_category,
+          "Application Number": fyd.application_number,
+          "Mobile Number": fyd.mobile_number,
+          "Alternative Number": fyd.alternative_number,
+          "Alternate Email": fyd.email_id,
+          "Date of Birth": fyd.dob,
+          "Gender": fyd.gender,
+          "Gender (Other)": fyd.gender_other,
+          "Blood Group": fyd.blood_group,
+          "Mother Tongue": fyd.mother_tongue,
+          "Aadhaar Number": fyd.aadhaar_number,
+          "Father's Name": fyd.father_name,
+          "Father's Mobile": fyd.father_mobile,
+          "Mother's Name": fyd.mother_name,
+          "Mother's Mobile": fyd.mother_mobile,
+          "Father's Occupation": fyd.father_occupation,
+          "Mother's Occupation": fyd.mother_occupation,
+          "Single Parent": fyd.single_parent,
+          "Religion": fyd.religion,
+          "Community": fyd.community,
+          "Community (Other)": fyd.community_other,
+          "Caste Name": fyd.caste_name,
+          "Community Certificate No.": fyd.community_certificate_number,
+          "Annual Income": fyd.annual_income,
+          "Income Certificate No.": fyd.income_certificate_number,
+          "First Graduate": fyd.first_graduate,
+          "First Graduate Cert No.": fyd.first_graduate_certificate_number,
+          "EMIS Number": fyd.emis_number,
+          "Date of Doc Submission": fyd.date_of_document_submission
         };
       });
     } catch (err) {
