@@ -22,6 +22,7 @@ export const firstYearDataSchema = z.object({
   blood_group: z.string().min(1, "Blood Group is required"),
   mother_tongue: z.string().min(1, "Mother Tongue is required"),
   aadhaar_number: z.string().regex(/^[0-9]{12}$/, "Must be a 12-digit number"),
+  field_of_interest: z.string().optional(),
   
   residence_type: z.string().min(1, "Residence Type is required"),
   transport_mode: z.string().optional(),

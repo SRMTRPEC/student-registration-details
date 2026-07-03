@@ -122,6 +122,7 @@ export const AdminDashboard = () => {
           "Blood Group": fyd.blood_group,
           "Mother Tongue": fyd.mother_tongue,
           "Aadhaar Number": fyd.aadhaar_number,
+          "Field of Interest": fyd.field_of_interest,
           "Father's Name": fyd.father_name,
           "Father's Mobile": fyd.father_mobile,
           "Mother's Name": fyd.mother_name,

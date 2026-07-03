@@ -193,6 +193,7 @@ export const StudentProfileModal = ({ folderNumber, onClose, startInPrintMode }:
                     <Field label="Date of Birth" value={firstYearData.dob} />
                     <Field label="Gender" value={firstYearData.gender === 'Other' ? firstYearData.gender_other : firstYearData.gender} />
                     <Field label="Aadhaar Number" value={firstYearData.aadhaar_number} />
+                    <Field label="Field of Interest" value={firstYearData.field_of_interest} />
                     <Field label="Community" value={firstYearData.community === 'Other' ? firstYearData.community_other : firstYearData.community} />
                     <Field label="Admission Category" value={firstYearData.admission_category} />
                     <Field label="Programme" value={firstYearData.programme} />

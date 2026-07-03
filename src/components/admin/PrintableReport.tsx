@@ -56,6 +56,7 @@ export const PrintableReport = ({ basicData, firstYearData, documentsData }: Pri
           <div><strong className="text-gray-700">DOB:</strong> {basicData?.dob}</div>
           <div><strong className="text-gray-700">Gender:</strong> {basicData?.gender}</div>
           <div><strong className="text-gray-700">Aadhaar:</strong> {basicData?.aadhaar_number}</div>
+          <div><strong className="text-gray-700">Field of Interest:</strong> {firstYearData?.field_of_interest || '-'}</div>
           <div><strong className="text-gray-700">Mobile:</strong> {basicData?.mobile_number}</div>
           <div className="col-span-2"><strong className="text-gray-700">Email:</strong> {basicData?.email}</div>
           <div><strong className="text-gray-700">Residence Type:</strong> {firstYearData?.residence_type || '-'}</div>

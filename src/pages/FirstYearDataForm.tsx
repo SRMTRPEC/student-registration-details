@@ -120,7 +120,7 @@ export const FirstYearDataForm = () => {
   const handleNext = async () => {
     let fieldsToValidate: any[] = [];
     if (currentStep === 0) {
-      fieldsToValidate = ['email', 'student_name', 'programme', 'course', 'admission_category', 'application_number', 'mobile_number', 'alternative_number', 'email_id', 'dob', 'gender', 'blood_group', 'mother_tongue', 'aadhaar_number', 'residence_type', ...(residenceType === 'Dayscholar' ? ['transport_mode'] : []), ...(transportMode === 'College Bus' ? ['boarding_point'] : []), ...(gender === 'Other' ? ['gender_other'] : [])];
+      fieldsToValidate = ['email', 'student_name', 'programme', 'course', 'admission_category', 'application_number', 'mobile_number', 'alternative_number', 'email_id', 'dob', 'gender', 'blood_group', 'mother_tongue', 'aadhaar_number', 'field_of_interest', 'residence_type', ...(residenceType === 'Dayscholar' ? ['transport_mode'] : []), ...(transportMode === 'College Bus' ? ['boarding_point'] : []), ...(gender === 'Other' ? ['gender_other'] : [])];
     } else if (currentStep === 1) {
       fieldsToValidate = ['father_name', 'father_mobile', 'father_occupation', 'mother_name', 'mother_mobile', 'mother_occupation', 'single_parent', 'siblings_count'];
       
@@ -277,7 +277,8 @@ export const FirstYearDataForm = () => {
                   <Select label="Blood Group" {...register('blood_group')} error={errors.blood_group?.message} required options={['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map(bg => ({value: bg, label: bg}))} />
                   <Input label="Mother Tongue" {...register('mother_tongue')} error={errors.mother_tongue?.message} required />
                   
-                  <Input label="Aadhaar Number" {...register('aadhaar_number')} error={errors.aadhaar_number?.message} required className="md:col-span-2" />
+                  <Input label="Aadhaar Number" {...register('aadhaar_number')} error={errors.aadhaar_number?.message} required />
+                  <Input label="Field of Interest (Optional)" {...register('field_of_interest')} error={errors.field_of_interest?.message} />
                   
                   <div className="md:col-span-2 border-t border-white/10 pt-6 mt-2">
                     <h3 className="text-lg font-medium text-white mb-4">Residence & Transport Details</h3>
