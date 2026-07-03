@@ -132,7 +132,7 @@ export const FirstYearDataForm = () => {
         }
       }
     } else if (currentStep === 2) {
-      fieldsToValidate = ['religion', 'community', 'caste_name', 'community_certificate_number', 'annual_income', 'first_graduate', 'emis_number', 'district', 'block', 'school', 'date_of_document_submission', ...(community === 'Other' ? ['community_other'] : [])];
+      fieldsToValidate = ['religion', 'community', 'caste_name', 'community_certificate_number', 'father_income', 'mother_income', 'guardian_income', 'first_graduate', 'emis_number', 'district', 'block', 'school', 'date_of_document_submission', ...(community === 'Other' ? ['community_other'] : [])];
     }
     
     const isStepValid = await trigger(fieldsToValidate);
@@ -375,8 +375,13 @@ export const FirstYearDataForm = () => {
                   <Input label="Caste Name" {...register('caste_name')} error={errors.caste_name?.message} required />
                   <Input label="Community Certificate Number" placeholder="TN-XXXX" {...register('community_certificate_number')} error={errors.community_certificate_number?.message} required />
                   
-                  <Input label="Annual Income" {...register('annual_income')} error={errors.annual_income?.message} required />
-                  <Input label="Income Certificate Number (Optional)" {...register('income_certificate_number')} error={errors.income_certificate_number?.message} />
+                  <div className="md:col-span-2 grid md:grid-cols-3 gap-6">
+                    <Input label="Father's Income" {...register('father_income')} error={errors.father_income?.message} required />
+                    <Input label="Mother's Income" {...register('mother_income')} error={errors.mother_income?.message} required />
+                    <Input label="Guardian's Income (Optional)" {...register('guardian_income')} error={errors.guardian_income?.message} />
+                  </div>
+                  
+                  <Input label="Income Certificate Number (Optional)" {...register('income_certificate_number')} error={errors.income_certificate_number?.message} className="md:col-span-2" />
                   
                   <Select label="First Graduate" {...register('first_graduate')} error={errors.first_graduate?.message} required options={[{ value: 'Yes', label: 'Yes' }, { value: 'No', label: 'No' }]} />
                   {firstGraduate === 'Yes' && (

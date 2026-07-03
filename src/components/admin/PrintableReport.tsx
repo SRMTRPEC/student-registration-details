@@ -107,7 +107,9 @@ export const PrintableReport = ({ basicData, firstYearData, documentsData }: Pri
           <div><strong className="text-gray-700">Caste:</strong> {firstYearData?.caste_name || '-'}</div>
           <div><strong className="text-gray-700">Community Cert No:</strong> {firstYearData?.community_certificate_number || '-'}</div>
           
-          <div><strong className="text-gray-700">Annual Income:</strong> {firstYearData?.annual_income || '-'}</div>
+          <div><strong className="text-gray-700">Father Income:</strong> {firstYearData?.father_income || '-'}</div>
+          <div><strong className="text-gray-700">Mother Income:</strong> {firstYearData?.mother_income || '-'}</div>
+          <div><strong className="text-gray-700">Guardian Income:</strong> {firstYearData?.guardian_income || '-'}</div>
           <div><strong className="text-gray-700">Income Cert No:</strong> {firstYearData?.income_certificate_number || '-'}</div>
           
           <div><strong className="text-gray-700">First Graduate:</strong> {firstYearData?.first_graduate || '-'}</div>

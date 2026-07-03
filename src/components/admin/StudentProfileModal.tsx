@@ -236,7 +236,9 @@ export const StudentProfileModal = ({ folderNumber, onClose, startInPrintMode }:
                     <Field label="Religion" value={firstYearData.religion} />
                     <Field label="Caste Name" value={firstYearData.caste_name} />
                     <Field label="Community Certificate No." value={firstYearData.community_certificate_number} />
-                    <Field label="Annual Income" value={firstYearData.annual_income} />
+                    <Field label="Father's Income" value={firstYearData.father_income} />
+                    <Field label="Mother's Income" value={firstYearData.mother_income} />
+                    <Field label="Guardian's Income" value={firstYearData.guardian_income} />
                     <Field label="Income Certificate No." value={firstYearData.income_certificate_number} />
                     <Field label="First Graduate" value={firstYearData.first_graduate} />
                     <Field label="First Graduate Cert. No." value={firstYearData.first_graduate_certificate_number} />
