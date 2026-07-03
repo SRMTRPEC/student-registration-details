@@ -23,6 +23,7 @@
     @apply bg-background text-text font-sans antialiased;
     background-color: var(--color-background);
     color: var(--color-text);
+    color-scheme: dark;
   }
 }
 
