@@ -415,6 +415,7 @@ export const FirstYearDataForm = () => {
                         <SearchableSelect 
                           label="School" 
                           {...register('school')}
+                          value={watch('school')}
                           error={errors.school?.message} 
                           required 
                           options={schoolOptions}
