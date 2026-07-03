@@ -9,8 +9,10 @@ import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
 import { Card } from '../components/ui/Card';
 import { StepIndicator } from '../components/ui/StepIndicator';
+import { SearchableSelect } from '../components/ui/SearchableSelect';
 import { firstYearDataSchema, type FirstYearDataFormData } from '../schemas/forms';
 import { supabase } from '../supabase/client';
+import { schoolData } from '../data/schools';
 
 const STEPS = ['Personal Details', 'Family Details', 'Community & Income'];
 
@@ -29,6 +31,35 @@ export const FirstYearDataForm = () => {
   const firstGraduate = watch('first_graduate');
   const gender = watch('gender');
   const community = watch('community');
+  const district = watch('district');
+  const block = watch('block');
+
+  // Prepare options for dependent dropdowns
+  const districtOptions = Object.keys(schoolData).sort().map(d => ({ value: d, label: d }));
+  
+  const blockOptions = district && schoolData[district] 
+    ? Object.keys(schoolData[district]).sort().map(b => ({ value: b, label: b }))
+    : [];
+    
+  const schoolOptions = district && block && schoolData[district]?.[block]
+    ? schoolData[district][block].sort().map(s => ({ value: s, label: s }))
+    : [];
+
+  // Clear dependent fields when parent changes
+  useEffect(() => {
+    const subscription = watch((_, { name, type }) => {
+      if (type === 'change') {
+        if (name === 'district') {
+          setValue('block', '', { shouldValidate: false });
+          setValue('school', '', { shouldValidate: false });
+        }
+        if (name === 'block') {
+          setValue('school', '', { shouldValidate: false });
+        }
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, setValue]);
 
   // Load draft data on mount
   useEffect(() => {
@@ -68,7 +99,7 @@ export const FirstYearDataForm = () => {
     } else if (currentStep === 1) {
       fieldsToValidate = ['father_name', 'father_mobile', 'father_occupation', 'mother_name', 'mother_mobile', 'mother_occupation', 'single_parent'];
     } else if (currentStep === 2) {
-      fieldsToValidate = ['religion', 'community', 'caste_name', 'community_certificate_number', 'annual_income', 'first_graduate', 'emis_number', 'date_of_document_submission', ...(community === 'Other' ? ['community_other'] : [])];
+      fieldsToValidate = ['religion', 'community', 'caste_name', 'community_certificate_number', 'annual_income', 'first_graduate', 'emis_number', 'district', 'block', 'school', 'date_of_document_submission', ...(community === 'Other' ? ['community_other'] : [])];
     }
     
     const isStepValid = await trigger(fieldsToValidate);
@@ -252,8 +283,42 @@ export const FirstYearDataForm = () => {
                     <Input label="First Graduate Certificate Number" {...register('first_graduate_certificate_number')} error={errors.first_graduate_certificate_number?.message} required />
                   )}
                   
-                  <Input label="EMIS Number" {...register('emis_number')} error={errors.emis_number?.message} required />
-                  <Input label="Date of Document Submission" type="date" {...register('date_of_document_submission')} error={errors.date_of_document_submission?.message} required />
+                  <div className="md:col-span-2 border-t border-white/10 pt-6 mt-2">
+                    <h3 className="text-lg font-medium text-white mb-4">School Details</h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <Input label="EMIS Number" {...register('emis_number')} error={errors.emis_number?.message} required className="md:col-span-2" />
+                      
+                      <Select 
+                        label="District" 
+                        {...register('district')} 
+                        error={errors.district?.message} 
+                        required 
+                        options={districtOptions} 
+                      />
+                      
+                      <Select 
+                        label="Block" 
+                        {...register('block')} 
+                        error={errors.block?.message} 
+                        required 
+                        options={blockOptions} 
+                        disabled={!district}
+                      />
+                      
+                      <div className="md:col-span-2">
+                        <SearchableSelect 
+                          label="School" 
+                          {...register('school')}
+                          error={errors.school?.message} 
+                          required 
+                          options={schoolOptions}
+                          disabled={!block}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Input label="Date of Document Submission" type="date" {...register('date_of_document_submission')} error={errors.date_of_document_submission?.message} required className="md:col-span-2 mt-4" />
                 </div>
               )}
             </motion.div>

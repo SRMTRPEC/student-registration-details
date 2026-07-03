@@ -36,6 +36,10 @@ export const firstYearDataSchema = z.object({
   first_graduate_certificate_number: z.string().refine(val => !val || val.startsWith("TN-"), "Must start with TN-").optional(),
   emis_number: z.string().min(1, "EMIS Number is required"),
   
+  district: z.string().min(1, "District is required"),
+  block: z.string().min(1, "Block is required"),
+  school: z.string().min(1, "School is required"),
+  
   date_of_document_submission: z.string().min(1, "Date of Submission is required"),
 });
 
