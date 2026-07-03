@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -48,28 +48,50 @@ export const FirstYearDataForm = () => {
     ? schoolData[district][block].sort().map(s => ({ value: s, label: s }))
     : [];
 
-  // Clear dependent fields when parent changes
+  // Clear dependent fields when parent changes, safely ignoring initial load
+  const prevDistrict = useRef<string | undefined>(district);
+  const prevBlock = useRef<string | undefined>(block);
+  const prevResidence = useRef<string | undefined>(residenceType);
+  const prevTransport = useRef<string | undefined>(transportMode);
+  
+  useEffect(() => {
+    // Only clear if the previous value was set (not initial mount/draft load) and it actually changed
+    if (prevDistrict.current !== undefined && prevDistrict.current !== district) {
+      setValue('block', '', { shouldValidate: false });
+      setValue('school', '', { shouldValidate: false });
+    }
+    prevDistrict.current = district;
+  }, [district, setValue]);
+
+  useEffect(() => {
+    if (prevBlock.current !== undefined && prevBlock.current !== block) {
+      setValue('school', '', { shouldValidate: false });
+    }
+    prevBlock.current = block;
+  }, [block, setValue]);
+
+  useEffect(() => {
+    if (prevResidence.current !== undefined && prevResidence.current !== residenceType) {
+      if (residenceType !== 'Dayscholar') {
+        setValue('transport_mode', '', { shouldValidate: false });
+        setValue('boarding_point', '', { shouldValidate: false });
+      }
+    }
+    prevResidence.current = residenceType;
+  }, [residenceType, setValue]);
+
+  useEffect(() => {
+    if (prevTransport.current !== undefined && prevTransport.current !== transportMode) {
+      if (transportMode !== 'College Bus') {
+        setValue('boarding_point', '', { shouldValidate: false });
+      }
+    }
+    prevTransport.current = transportMode;
+  }, [transportMode, setValue]);
+
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
       if (type === 'change') {
-        if (name === 'district') {
-          setValue('block', '', { shouldValidate: false });
-          setValue('school', '', { shouldValidate: false });
-        }
-        if (name === 'block') {
-          setValue('school', '', { shouldValidate: false });
-        }
-        if (name === 'residence_type') {
-          if (value.residence_type !== 'Dayscholar') {
-            setValue('transport_mode', '', { shouldValidate: false });
-            setValue('boarding_point', '', { shouldValidate: false });
-          }
-        }
-        if (name === 'transport_mode') {
-          if (value.transport_mode !== 'College Bus') {
-            setValue('boarding_point', '', { shouldValidate: false });
-          }
-        }
         if (name === 'siblings_count') {
           const count = parseInt(value.siblings_count || '0', 10);
           const currentSiblings = Array.isArray(value.siblings) ? [...value.siblings] : [];
