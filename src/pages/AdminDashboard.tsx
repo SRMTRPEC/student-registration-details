@@ -142,6 +142,22 @@ export const AdminDashboard = () => {
           "District": fyd.district,
           "Block": fyd.block,
           "School": fyd.school,
+          "Siblings Count": fyd.siblings_count || "0",
+          "Sibling 1 Name": fyd.siblings?.[0]?.name || "",
+          "Sibling 1 Education": fyd.siblings?.[0]?.education || "",
+          "Sibling 1 Occupation": fyd.siblings?.[0]?.occupation || "",
+          "Sibling 2 Name": fyd.siblings?.[1]?.name || "",
+          "Sibling 2 Education": fyd.siblings?.[1]?.education || "",
+          "Sibling 2 Occupation": fyd.siblings?.[1]?.occupation || "",
+          "Sibling 3 Name": fyd.siblings?.[2]?.name || "",
+          "Sibling 3 Education": fyd.siblings?.[2]?.education || "",
+          "Sibling 3 Occupation": fyd.siblings?.[2]?.occupation || "",
+          "Sibling 4 Name": fyd.siblings?.[3]?.name || "",
+          "Sibling 4 Education": fyd.siblings?.[3]?.education || "",
+          "Sibling 4 Occupation": fyd.siblings?.[3]?.occupation || "",
+          "Sibling 5 Name": fyd.siblings?.[4]?.name || "",
+          "Sibling 5 Education": fyd.siblings?.[4]?.education || "",
+          "Sibling 5 Occupation": fyd.siblings?.[4]?.occupation || "",
           "Date of Doc Submission": fyd.date_of_document_submission
         };
       });

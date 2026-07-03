@@ -1,5 +1,11 @@
 import { z } from 'zod';
 
+export const siblingSchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  education: z.string().min(1, "Education is required"),
+  occupation: z.string().min(1, "Occupation is required"),
+});
+
 export const firstYearDataSchema = z.object({
   email: z.string().email("Invalid email address"),
   student_name: z.string().min(2, "Student Name is required"),
@@ -28,6 +34,9 @@ export const firstYearDataSchema = z.object({
   single_parent: z.string().min(1, "Please select Yes or No"),
   father_occupation: z.string().min(2, "Father's Occupation is required"),
   mother_occupation: z.string().min(2, "Mother's Occupation is required"),
+  
+  siblings_count: z.string().min(1, "Please select sibling count"),
+  siblings: z.array(siblingSchema).optional(),
   
   religion: z.string().min(1, "Religion is required"),
   community: z.string().min(1, "Community is required"),

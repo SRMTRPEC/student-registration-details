@@ -35,6 +35,7 @@ export const FirstYearDataForm = () => {
   const block = watch('block');
   const residenceType = watch('residence_type');
   const transportMode = watch('transport_mode');
+  const siblingsCount = parseInt(watch('siblings_count') || '0', 10);
 
   // Prepare options for dependent dropdowns
   const districtOptions = Object.keys(schoolData).sort().map(d => ({ value: d, label: d }));
@@ -67,6 +68,17 @@ export const FirstYearDataForm = () => {
         if (name === 'transport_mode') {
           if (value.transport_mode !== 'College Bus') {
             setValue('boarding_point', '', { shouldValidate: false });
+          }
+        }
+        if (name === 'siblings_count') {
+          const count = parseInt(value.siblings_count || '0', 10);
+          const currentSiblings = Array.isArray(value.siblings) ? [...value.siblings] : [];
+          if (count < currentSiblings.length) {
+            setValue('siblings', currentSiblings.slice(0, count) as any, { shouldValidate: true });
+          } else if (count > currentSiblings.length) {
+            const diff = count - currentSiblings.length;
+            const newSiblings = [...currentSiblings, ...Array(diff).fill({ name: '', education: '', occupation: '' })];
+            setValue('siblings', newSiblings as any, { shouldValidate: false });
           }
         }
       }
@@ -110,7 +122,15 @@ export const FirstYearDataForm = () => {
     if (currentStep === 0) {
       fieldsToValidate = ['email', 'student_name', 'programme', 'course', 'admission_category', 'application_number', 'mobile_number', 'alternative_number', 'email_id', 'dob', 'gender', 'blood_group', 'mother_tongue', 'aadhaar_number', 'residence_type', ...(residenceType === 'Dayscholar' ? ['transport_mode'] : []), ...(transportMode === 'College Bus' ? ['boarding_point'] : []), ...(gender === 'Other' ? ['gender_other'] : [])];
     } else if (currentStep === 1) {
-      fieldsToValidate = ['father_name', 'father_mobile', 'father_occupation', 'mother_name', 'mother_mobile', 'mother_occupation', 'single_parent'];
+      fieldsToValidate = ['father_name', 'father_mobile', 'father_occupation', 'mother_name', 'mother_mobile', 'mother_occupation', 'single_parent', 'siblings_count'];
+      
+      if (siblingsCount > 0) {
+        for (let i = 0; i < siblingsCount; i++) {
+          fieldsToValidate.push(`siblings.${i}.name`);
+          fieldsToValidate.push(`siblings.${i}.education`);
+          fieldsToValidate.push(`siblings.${i}.occupation`);
+        }
+      }
     } else if (currentStep === 2) {
       fieldsToValidate = ['religion', 'community', 'caste_name', 'community_certificate_number', 'annual_income', 'first_graduate', 'emis_number', 'district', 'block', 'school', 'date_of_document_submission', ...(community === 'Other' ? ['community_other'] : [])];
     }
@@ -307,6 +327,39 @@ export const FirstYearDataForm = () => {
                   <Input label="Mother's Occupation" {...register('mother_occupation')} error={errors.mother_occupation?.message} required />
                   
                   <Select label="Single Parent" {...register('single_parent')} error={errors.single_parent?.message} required options={[{ value: 'Yes', label: 'Yes' }, { value: 'No', label: 'No' }]} className="md:col-span-2" />
+                  
+                  <div className="md:col-span-2 border-t border-white/10 pt-6 mt-2">
+                    <h3 className="text-lg font-medium text-white mb-4">Siblings Details</h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <Select 
+                        label="Number of Siblings" 
+                        {...register('siblings_count')} 
+                        error={errors.siblings_count?.message} 
+                        required 
+                        options={[
+                          { value: '0', label: '0' },
+                          { value: '1', label: '1' },
+                          { value: '2', label: '2' },
+                          { value: '3', label: '3' },
+                          { value: '4', label: '4' },
+                          { value: '5', label: '5' }
+                        ]}
+                      />
+                    </div>
+                    
+                    {siblingsCount > 0 && (
+                      <div className="mt-6 space-y-4">
+                        {Array.from({ length: siblingsCount }).map((_, idx) => (
+                          <div key={idx} className="grid md:grid-cols-3 gap-4 p-4 bg-white/5 border border-white/10 rounded-lg">
+                            <h4 className="md:col-span-3 text-sm font-medium text-primary mb-1">Sibling {idx + 1}</h4>
+                            <Input label="Name" {...register(`siblings.${idx}.name` as const)} error={errors.siblings?.[idx]?.name?.message} required />
+                            <Input label="Education" {...register(`siblings.${idx}.education` as const)} error={errors.siblings?.[idx]?.education?.message} required />
+                            <Input label="Occupation" {...register(`siblings.${idx}.occupation` as const)} error={errors.siblings?.[idx]?.occupation?.message} required />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 

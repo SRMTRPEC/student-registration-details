@@ -87,7 +87,23 @@ export const PrintableReport = ({ basicData, firstYearData, documentsData }: Pri
           <div className="col-span-2"><strong className="text-gray-700">Mother Occupation:</strong> {firstYearData?.mother_occupation || '-'}</div>
 
           <div className="mt-2"><strong className="text-gray-700">Single Parent:</strong> {firstYearData?.single_parent || '-'}</div>
-          <div className="mt-2"><strong className="text-gray-700">Religion:</strong> {firstYearData?.religion || '-'}</div>
+          
+          <div className="col-span-2 mt-4">
+            <h3 className="font-bold border-b border-gray-300 pb-1 mb-2">Siblings Details ({firstYearData?.siblings_count || '0'})</h3>
+            {firstYearData?.siblings && firstYearData.siblings.length > 0 ? (
+              <div className="space-y-2 mt-2">
+                {firstYearData.siblings.map((sibling: any, idx: number) => (
+                  <div key={idx} className="grid grid-cols-3 gap-4 bg-gray-50 p-2 rounded text-sm">
+                    <div><strong className="text-gray-700">Name:</strong> {sibling.name}</div>
+                    <div><strong className="text-gray-700">Education:</strong> {sibling.education}</div>
+                    <div><strong className="text-gray-700">Occupation:</strong> {sibling.occupation}</div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </div>
+
+          <div className="mt-4"><strong className="text-gray-700">Religion:</strong> {firstYearData?.religion || '-'}</div>
           <div><strong className="text-gray-700">Caste:</strong> {firstYearData?.caste_name || '-'}</div>
           <div><strong className="text-gray-700">Community Cert No:</strong> {firstYearData?.community_certificate_number || '-'}</div>
           

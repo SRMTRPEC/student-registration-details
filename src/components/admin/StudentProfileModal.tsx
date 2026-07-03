@@ -218,6 +218,21 @@ export const StudentProfileModal = ({ folderNumber, onClose, startInPrintMode }:
                     <Field label="Father's Occupation" value={firstYearData.father_occupation} />
                     <Field label="Mother's Occupation" value={firstYearData.mother_occupation} />
                     <Field label="Single Parent" value={firstYearData.single_parent} />
+                    <Field label="Number of Siblings" value={firstYearData.siblings_count || '0'} />
+                    {firstYearData.siblings && firstYearData.siblings.length > 0 && (
+                      <div className="md:col-span-2 space-y-3 my-2">
+                        {firstYearData.siblings.map((sibling: any, idx: number) => (
+                          <div key={idx} className="bg-white/5 p-4 rounded-lg border border-white/5">
+                            <h4 className="text-primary font-medium text-sm mb-3">Sibling {idx + 1}</h4>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              <Field label="Name" value={sibling.name} />
+                              <Field label="Education" value={sibling.education} />
+                              <Field label="Occupation" value={sibling.occupation} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     <Field label="Religion" value={firstYearData.religion} />
                     <Field label="Caste Name" value={firstYearData.caste_name} />
                     <Field label="Community Certificate No." value={firstYearData.community_certificate_number} />
