@@ -62,12 +62,12 @@ export const StudentProfileModal = ({ folderNumber, onClose }: StudentProfileMod
     fetchProfile();
   }, [folderNumber]);
 
-  const handlePrint = () => {
+  const handleShowReport = () => {
     setIsPrinting(true);
-    setTimeout(() => {
-      window.print();
-      setIsPrinting(false);
-    }, 100); // Give DOM time to render the print view
+  };
+
+  const handleActualPrint = () => {
+    window.print();
   };
 
   const Field = ({ label, value }: { label: string, value: string | undefined | null }) => (
@@ -79,8 +79,34 @@ export const StudentProfileModal = ({ folderNumber, onClose }: StudentProfileMod
 
   if (isPrinting) {
     return (
-      <div className="fixed inset-0 z-[100] bg-white overflow-auto print:static print:bg-transparent print:overflow-visible">
-        <PrintableReport basicData={firstYearData} firstYearData={firstYearData} documentsData={documentsData} />
+      <div className="fixed inset-0 z-[100] bg-white overflow-auto print:static print:bg-transparent print:overflow-visible flex flex-col">
+        {/* Floating Header for Report View (Hidden when actually printing) */}
+        <div className="sticky top-0 bg-gray-100 border-b border-gray-300 p-4 flex items-center justify-between shadow-sm z-50 print:hidden text-black">
+          <div>
+            <h2 className="text-lg font-bold">Report Preview</h2>
+            <p className="text-sm text-gray-600">Review the report before printing</p>
+          </div>
+          <div className="flex gap-3">
+            <button 
+              onClick={() => setIsPrinting(false)}
+              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
+            >
+              Back to Profile
+            </button>
+            <button
+              onClick={handleActualPrint}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium shadow-sm"
+            >
+              <Printer className="w-4 h-4" />
+              Print Now
+            </button>
+          </div>
+        </div>
+        
+        {/* The actual printable report */}
+        <div className="flex-1">
+          <PrintableReport basicData={firstYearData} firstYearData={firstYearData} documentsData={documentsData} />
+        </div>
       </div>
     );
   }
@@ -110,7 +136,7 @@ export const StudentProfileModal = ({ folderNumber, onClose }: StudentProfileMod
             <div className="flex items-center gap-3">
               {!isLoading && firstYearData && (
                 <button
-                  onClick={handlePrint}
+                  onClick={handleShowReport}
                   className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
                 >
                   <Printer className="w-4 h-4" />
