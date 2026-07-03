@@ -7,13 +7,14 @@ import { PrintableReport } from './PrintableReport';
 interface StudentProfileModalProps {
   folderNumber: string;
   onClose: () => void;
+  startInPrintMode?: boolean;
 }
 
-export const StudentProfileModal = ({ folderNumber, onClose }: StudentProfileModalProps) => {
+export const StudentProfileModal = ({ folderNumber, onClose, startInPrintMode }: StudentProfileModalProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [firstYearData, setFirstYearData] = useState<any>(null);
   const [documentsData, setDocumentsData] = useState<any[]>([]);
-  const [isPrinting, setIsPrinting] = useState(false);
+  const [isPrinting, setIsPrinting] = useState(!!startInPrintMode);
 
   useEffect(() => {
     const fetchProfile = async () => {

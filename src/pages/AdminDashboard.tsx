@@ -15,6 +15,7 @@ export const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [selectedFolderNumber, setSelectedFolderNumber] = useState<string | null>(null);
+  const [printMode, setPrintMode] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -284,8 +285,21 @@ export const AdminDashboard = () => {
                         {student.status}
                       </span>
                     </td>
-                    <td className="p-4 text-right">
-                      <Button variant="ghost" className="text-primary hover:text-white px-3 py-1 mr-2" onClick={() => setSelectedFolderNumber(student.folder_number)}>View Profile</Button>
+                    <td className="p-4 text-right whitespace-nowrap">
+                      <Button 
+                        variant="ghost" 
+                        className="text-primary hover:text-white px-3 py-1 mr-2" 
+                        onClick={() => { setSelectedFolderNumber(student.folder_number); setPrintMode(false); }}
+                      >
+                        View Profile
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        className="text-blue-500 hover:text-blue-400 px-3 py-1 mr-2" 
+                        onClick={() => { setSelectedFolderNumber(student.folder_number); setPrintMode(true); }}
+                      >
+                        Print
+                      </Button>
                       <Button variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10 px-2 py-1" onClick={() => handleDelete(student.folder_number)} title="Delete Record">
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -301,7 +315,8 @@ export const AdminDashboard = () => {
       {selectedFolderNumber && (
         <StudentProfileModal 
           folderNumber={selectedFolderNumber} 
-          onClose={() => setSelectedFolderNumber(null)} 
+          onClose={() => { setSelectedFolderNumber(null); setPrintMode(false); }} 
+          startInPrintMode={printMode}
         />
       )}
     </div>
