@@ -181,6 +181,15 @@ export const StudentProfileModal = ({ folderNumber, onClose, startInPrintMode }:
                     <Field label="Primary Email" value={firstYearData.email} />
                     <Field label="Alternate Email" value={firstYearData.email_id} />
                     <Field label="Mobile Number" value={firstYearData.mobile_number} />
+                    <Field label="Residence Type" value={firstYearData.residence_type} />
+                    {firstYearData.residence_type === 'Dayscholar' && (
+                      <>
+                        <Field label="Transport Mode" value={firstYearData.transport_mode} />
+                        {firstYearData.transport_mode === 'College Bus' && (
+                          <Field label="Boarding Point" value={firstYearData.boarding_point} />
+                        )}
+                      </>
+                    )}
                     <Field label="Date of Birth" value={firstYearData.dob} />
                     <Field label="Gender" value={firstYearData.gender === 'Other' ? firstYearData.gender_other : firstYearData.gender} />
                     <Field label="Aadhaar Number" value={firstYearData.aadhaar_number} />

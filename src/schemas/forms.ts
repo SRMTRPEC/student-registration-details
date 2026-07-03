@@ -17,6 +17,10 @@ export const firstYearDataSchema = z.object({
   mother_tongue: z.string().min(1, "Mother Tongue is required"),
   aadhaar_number: z.string().regex(/^[0-9]{12}$/, "Must be a 12-digit number"),
   
+  residence_type: z.string().min(1, "Residence Type is required"),
+  transport_mode: z.string().optional(),
+  boarding_point: z.string().optional(),
+  
   father_name: z.string().min(2, "Father Name is required"),
   father_mobile: z.string().regex(/^[0-9]{10}$/, "Must be a 10-digit number"),
   mother_name: z.string().min(2, "Mother Name is required"),
@@ -41,6 +45,22 @@ export const firstYearDataSchema = z.object({
   school: z.string().min(1, "School is required"),
   
   date_of_document_submission: z.string().min(1, "Date of Submission is required"),
+}).superRefine((data, ctx) => {
+  if (data.residence_type === 'Dayscholar') {
+    if (!data.transport_mode) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Transport Mode is required for Dayscholars",
+        path: ["transport_mode"],
+      });
+    } else if (data.transport_mode === 'College Bus' && !data.boarding_point) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Boarding Point is required for College Bus",
+        path: ["boarding_point"],
+      });
+    }
+  }
 });
 
 export type FirstYearDataFormData = z.infer<typeof firstYearDataSchema>;

@@ -33,6 +33,8 @@ export const FirstYearDataForm = () => {
   const community = watch('community');
   const district = watch('district');
   const block = watch('block');
+  const residenceType = watch('residence_type');
+  const transportMode = watch('transport_mode');
 
   // Prepare options for dependent dropdowns
   const districtOptions = Object.keys(schoolData).sort().map(d => ({ value: d, label: d }));
@@ -47,7 +49,7 @@ export const FirstYearDataForm = () => {
 
   // Clear dependent fields when parent changes
   useEffect(() => {
-    const subscription = watch((_, { name, type }) => {
+    const subscription = watch((value, { name, type }) => {
       if (type === 'change') {
         if (name === 'district') {
           setValue('block', '', { shouldValidate: false });
@@ -55,6 +57,17 @@ export const FirstYearDataForm = () => {
         }
         if (name === 'block') {
           setValue('school', '', { shouldValidate: false });
+        }
+        if (name === 'residence_type') {
+          if (value.residence_type !== 'Dayscholar') {
+            setValue('transport_mode', '', { shouldValidate: false });
+            setValue('boarding_point', '', { shouldValidate: false });
+          }
+        }
+        if (name === 'transport_mode') {
+          if (value.transport_mode !== 'College Bus') {
+            setValue('boarding_point', '', { shouldValidate: false });
+          }
         }
       }
     });
@@ -95,7 +108,7 @@ export const FirstYearDataForm = () => {
   const handleNext = async () => {
     let fieldsToValidate: any[] = [];
     if (currentStep === 0) {
-      fieldsToValidate = ['email', 'student_name', 'programme', 'course', 'admission_category', 'application_number', 'mobile_number', 'alternative_number', 'email_id', 'dob', 'gender', 'blood_group', 'mother_tongue', 'aadhaar_number', ...(gender === 'Other' ? ['gender_other'] : [])];
+      fieldsToValidate = ['email', 'student_name', 'programme', 'course', 'admission_category', 'application_number', 'mobile_number', 'alternative_number', 'email_id', 'dob', 'gender', 'blood_group', 'mother_tongue', 'aadhaar_number', 'residence_type', ...(residenceType === 'Dayscholar' ? ['transport_mode'] : []), ...(transportMode === 'College Bus' ? ['boarding_point'] : []), ...(gender === 'Other' ? ['gender_other'] : [])];
     } else if (currentStep === 1) {
       fieldsToValidate = ['father_name', 'father_mobile', 'father_occupation', 'mother_name', 'mother_mobile', 'mother_occupation', 'single_parent'];
     } else if (currentStep === 2) {
@@ -245,6 +258,40 @@ export const FirstYearDataForm = () => {
                   <Input label="Mother Tongue" {...register('mother_tongue')} error={errors.mother_tongue?.message} required />
                   
                   <Input label="Aadhaar Number" {...register('aadhaar_number')} error={errors.aadhaar_number?.message} required className="md:col-span-2" />
+                  
+                  <div className="md:col-span-2 border-t border-white/10 pt-6 mt-2">
+                    <h3 className="text-lg font-medium text-white mb-4">Residence & Transport Details</h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <Select 
+                        label="Residence Type" 
+                        {...register('residence_type')} 
+                        error={errors.residence_type?.message} 
+                        required 
+                        options={[{ value: 'Dayscholar', label: 'Dayscholar' }, { value: 'Hosteller', label: 'Hosteller' }]} 
+                      />
+                      
+                      {residenceType === 'Dayscholar' && (
+                        <Select 
+                          label="Transport Mode" 
+                          {...register('transport_mode')} 
+                          error={errors.transport_mode?.message} 
+                          required 
+                          options={[{ value: 'College Bus', label: 'College Bus' }, { value: 'Own Mode of Transport', label: 'Own Mode of Transport' }]} 
+                        />
+                      )}
+                      
+                      {residenceType === 'Dayscholar' && transportMode === 'College Bus' && (
+                        <div className="md:col-span-2">
+                          <Input 
+                            label="Boarding Point" 
+                            {...register('boarding_point')} 
+                            error={errors.boarding_point?.message} 
+                            required 
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
 
