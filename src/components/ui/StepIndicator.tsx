@@ -29,20 +29,19 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({ steps, currentStep
               <motion.div
                 initial={false}
                 animate={{
-                  backgroundColor: isCompleted || isCurrent ? 'var(--color-primary)' : 'var(--color-card)',
-                  borderColor: isCompleted || isCurrent ? 'var(--color-primary)' : 'rgba(255,255,255,0.1)',
                   scale: isCurrent ? 1.2 : 1,
                 }}
-                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center
-                  ${isCompleted || isCurrent ? 'text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]' : 'text-text-secondary'}
+                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-colors duration-500
+                  ${isCompleted || isCurrent 
+                    ? 'bg-primary border-primary text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]' 
+                    : 'bg-card border-white/10 text-text-secondary'}
                 `}
               >
                 {isCompleted ? <Check className="w-5 h-5" /> : <span>{index + 1}</span>}
               </motion.div>
-              <div className="absolute top-14 text-xs font-medium whitespace-nowrap text-center
-                text-text-secondary w-24 -ml-12 left-1/2"
-                style={{ color: isCurrent ? 'var(--color-text)' : undefined }}
-              >
+              <div className={`absolute top-14 text-xs font-medium whitespace-nowrap text-center w-24 -ml-12 left-1/2 transition-colors duration-500
+                ${isCurrent ? 'text-text' : 'text-text-secondary'}
+              `}>
                 {step}
               </div>
             </div>
