@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Loader2, Printer } from 'lucide-react';
+import { X, Loader2, Printer, Edit } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabase/client';
 import { PrintableReport } from './PrintableReport';
 
@@ -11,6 +12,7 @@ interface StudentProfileModalProps {
 }
 
 export const StudentProfileModal = ({ folderNumber, onClose, startInPrintMode }: StudentProfileModalProps) => {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [firstYearData, setFirstYearData] = useState<any>(null);
   const [documentsData, setDocumentsData] = useState<any[]>([]);
@@ -136,13 +138,22 @@ export const StudentProfileModal = ({ folderNumber, onClose, startInPrintMode }:
             </div>
             <div className="flex items-center gap-3">
               {!isLoading && firstYearData && (
-                <button
-                  onClick={handleShowReport}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                >
-                  <Printer className="w-4 h-4" />
-                  Print Report
-                </button>
+                <>
+                  <button
+                    onClick={() => navigate(`/form/first-year-data?adminEditFolder=${encodeURIComponent(folderNumber)}`)}
+                    className="flex items-center gap-2 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors text-sm font-medium"
+                  >
+                    <Edit className="w-4 h-4" />
+                    Edit Data
+                  </button>
+                  <button
+                    onClick={handleShowReport}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                  >
+                    <Printer className="w-4 h-4" />
+                    Print Report
+                  </button>
+                </>
               )}
               <button 
                 onClick={onClose}
