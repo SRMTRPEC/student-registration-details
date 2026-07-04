@@ -14,7 +14,7 @@ import { firstYearDataSchema, type FirstYearDataFormData } from '../schemas/form
 import { supabase } from '../supabase/client';
 import { schoolData } from '../data/schools';
 
-const STEPS = ['Personal Details', 'Family Details', 'Community & Income'];
+const STEPS = ['Personal Details', 'Family Details', 'Community, Income & School'];
 
 export const FirstYearDataForm = () => {
   const navigate = useNavigate();

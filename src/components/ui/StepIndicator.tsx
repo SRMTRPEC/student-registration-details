@@ -26,19 +26,15 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({ steps, currentStep
 
           return (
             <div key={step} className="relative z-10 flex flex-col items-center">
-              <motion.div
-                initial={false}
-                animate={{
-                  scale: isCurrent ? 1.2 : 1,
-                }}
-                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-colors duration-500
+              <div
+                className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-500
                   ${isCompleted || isCurrent 
-                    ? 'bg-primary border-primary text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]' 
-                    : 'bg-card border-white/10 text-text-secondary'}
+                    ? 'bg-primary border-primary text-white shadow-[0_0_15px_rgba(37,99,235,0.5)] scale-110' 
+                    : 'bg-card border-white/10 text-text-secondary scale-100'}
                 `}
               >
                 {isCompleted ? <Check className="w-5 h-5" /> : <span>{index + 1}</span>}
-              </motion.div>
+              </div>
               <div className={`absolute top-14 text-xs font-medium whitespace-nowrap text-center w-24 -ml-12 left-1/2 transition-colors duration-500
                 ${isCurrent ? 'text-text' : 'text-text-secondary'}
               `}>
