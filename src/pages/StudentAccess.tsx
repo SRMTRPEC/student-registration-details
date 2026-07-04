@@ -4,8 +4,35 @@ import { useNavigate } from 'react-router-dom';
 import { LogIn, UserPlus, ArrowLeft } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
+import { Select } from '../components/ui/Select';
 import { Button } from '../components/ui/Button';
 import { supabase } from '../supabase/client';
+
+const DEGREE_OPTIONS = [
+  { value: 'BE & B.Tech', label: 'BE & B.Tech' },
+  { value: 'M.E', label: 'M.E' },
+  { value: 'MBA', label: 'MBA' }
+];
+
+const DEPARTMENT_MAP: Record<string, { value: string, label: string }[]> = {
+  'BE & B.Tech': [
+    { value: 'B.E CIVIL ENGINEERING', label: 'B.E CIVIL ENGINEERING' },
+    { value: 'B.E ELECTRONICS AND COMMUNICATION ENGINEERING', label: 'B.E ELECTRONICS AND COMMUNICATION ENGINEERING' },
+    { value: 'B.E ELECTRICAL AND ELECTRONICS ENGINEERING', label: 'B.E ELECTRICAL AND ELECTRONICS ENGINEERING' },
+    { value: 'B.E COMPUTER SCIENCE AND ENGINEERING', label: 'B.E COMPUTER SCIENCE AND ENGINEERING' },
+    { value: 'B.E MECHANICAL ENGINEERING', label: 'B.E MECHANICAL ENGINEERING' },
+    { value: 'B.E CSE (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)', label: 'B.E CSE (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)' },
+    { value: 'B.TECH (INFORMATION TECHNOLOGY)', label: 'B.TECH (INFORMATION TECHNOLOGY)' },
+    { value: 'B.TECH ARTIFICIAL INTELLIGENCE AND DATA SCIENCE', label: 'B.TECH ARTIFICIAL INTELLIGENCE AND DATA SCIENCE' }
+  ],
+  'M.E': [
+    { value: 'M.E Thermal Engineering', label: 'M.E Thermal Engineering' },
+    { value: 'M.E VLSI Design', label: 'M.E VLSI Design' }
+  ],
+  'MBA': [
+    { value: 'MBA', label: 'MBA' }
+  ]
+};
 
 export const StudentAccess = () => {
   const navigate = useNavigate();
@@ -164,8 +191,24 @@ export const StudentAccess = () => {
                       <Input label="Mobile Number" type="tel" placeholder="9876543210" value={mobile} onChange={(e) => setMobile(e.target.value)} required />
                     </motion.div>
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="md:col-span-2 grid md:grid-cols-2 gap-4">
-                      <Input label="Course" type="text" placeholder="e.g. B.E" value={course} onChange={(e) => setCourse(e.target.value)} required />
-                      <Input label="Department" type="text" placeholder="e.g. Computer Science" value={department} onChange={(e) => setDepartment(e.target.value)} required />
+                      <Select 
+                        label="Degree" 
+                        value={course} 
+                        onChange={(e) => {
+                          setCourse(e.target.value);
+                          setDepartment(''); // Reset department when degree changes
+                        }} 
+                        required 
+                        options={DEGREE_OPTIONS} 
+                      />
+                      <Select 
+                        label="Course/Department" 
+                        value={department} 
+                        onChange={(e) => setDepartment(e.target.value)} 
+                        required 
+                        options={course && DEPARTMENT_MAP[course] ? DEPARTMENT_MAP[course] : []} 
+                        disabled={!course}
+                      />
                     </motion.div>
                   </>
                 )}

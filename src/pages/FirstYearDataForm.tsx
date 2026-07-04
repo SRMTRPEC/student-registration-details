@@ -16,6 +16,26 @@ import { schoolData } from '../data/schools';
 
 const STEPS = ['Personal Details', 'Family Details', 'Community, Income & School'];
 
+const DEPARTMENT_MAP: Record<string, { value: string, label: string }[]> = {
+  'BE & B.Tech': [
+    { value: 'B.E CIVIL ENGINEERING', label: 'B.E CIVIL ENGINEERING' },
+    { value: 'B.E ELECTRONICS AND COMMUNICATION ENGINEERING', label: 'B.E ELECTRONICS AND COMMUNICATION ENGINEERING' },
+    { value: 'B.E ELECTRICAL AND ELECTRONICS ENGINEERING', label: 'B.E ELECTRICAL AND ELECTRONICS ENGINEERING' },
+    { value: 'B.E COMPUTER SCIENCE AND ENGINEERING', label: 'B.E COMPUTER SCIENCE AND ENGINEERING' },
+    { value: 'B.E MECHANICAL ENGINEERING', label: 'B.E MECHANICAL ENGINEERING' },
+    { value: 'B.E CSE (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)', label: 'B.E CSE (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)' },
+    { value: 'B.TECH (INFORMATION TECHNOLOGY)', label: 'B.TECH (INFORMATION TECHNOLOGY)' },
+    { value: 'B.TECH ARTIFICIAL INTELLIGENCE AND DATA SCIENCE', label: 'B.TECH ARTIFICIAL INTELLIGENCE AND DATA SCIENCE' }
+  ],
+  'M.E': [
+    { value: 'M.E Thermal Engineering', label: 'M.E Thermal Engineering' },
+    { value: 'M.E VLSI Design', label: 'M.E VLSI Design' }
+  ],
+  'MBA': [
+    { value: 'MBA', label: 'MBA' }
+  ]
+};
+
 export const FirstYearDataForm = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -32,6 +52,7 @@ export const FirstYearDataForm = () => {
   });
 
   const firstGraduate = watch('first_graduate');
+  const programme = watch('programme');
   const gender = watch('gender');
   const community = watch('community');
   const residenceType = watch('residence_type');
@@ -355,7 +376,7 @@ export const FirstYearDataForm = () => {
                   <Input label="Student Name" {...register('student_name')} error={errors.student_name?.message} required className="md:col-span-2" />
                   
                   <Select label="Degree" {...register('programme')} error={errors.programme?.message} required options={[{ value: 'BE & B.Tech', label: 'BE & B.Tech' }, { value: 'M.E', label: 'M.E' }, { value: 'MBA', label: 'MBA' }]} />
-                  <Input label="Course/Department" {...register('course')} error={errors.course?.message} required placeholder="e.g. Computer Science" />
+                  <Select label="Course/Department" {...register('course')} error={errors.course?.message} required options={programme && DEPARTMENT_MAP[programme] ? DEPARTMENT_MAP[programme] : []} disabled={!programme} />
                   
                   <Select label="Admission Category" {...register('admission_category')} error={errors.admission_category?.message} required options={[{ value: 'Management Quota', label: 'Management Quota' }, { value: 'Government Quota (Counseling)', label: 'Government Quota (Counseling)' }]} />
                   <Input label="Application Number" {...register('application_number')} error={errors.application_number?.message} required readOnly className="bg-white/5 cursor-not-allowed text-text-secondary" />
