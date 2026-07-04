@@ -281,9 +281,54 @@ export const StudentProfileModal = ({ folderNumber, onClose, startInPrintMode }:
                     <Field label="First Graduate" value={firstYearData.first_graduate} />
                     <Field label="First Graduate Cert. No." value={firstYearData.first_graduate_certificate_number} />
                     <Field label="EMIS Number" value={firstYearData.emis_number} />
-                    <Field label="District" value={firstYearData.district} />
-                    <Field label="Block" value={firstYearData.block} />
-                    <Field label="School" value={firstYearData.school} />
+                    <Field label="Document Submission Date" value={firstYearData.date_of_document_submission} />
+                  </div>
+                  
+                  <div className="mt-8">
+                    <h3 className="text-lg font-medium text-white border-b border-white/10 pb-2 mb-4">10th Standard Details</h3>
+                    <div className="grid md:grid-cols-2 gap-4 gap-y-6">
+                      <Field label="District" value={firstYearData.tenth_district} />
+                      <Field label="Block" value={firstYearData.tenth_block} />
+                      <div className="col-span-2">
+                        <Field label="School" value={firstYearData.tenth_school} />
+                      </div>
+                      <div className="col-span-2 bg-white/5 p-4 rounded-lg">
+                        <h4 className="text-sm font-medium text-text-secondary mb-3">10th Marks (Out of 100 per subject)</h4>
+                        <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+                          <Field label="Language" value={firstYearData.tenth_lang_mark} />
+                          <Field label="English" value={firstYearData.tenth_eng_mark} />
+                          <Field label="Maths" value={firstYearData.tenth_math_mark} />
+                          <Field label="Science" value={firstYearData.tenth_sci_mark} />
+                          <Field label="Social" value={firstYearData.tenth_soc_mark} />
+                          <Field label="Total Mark" value={firstYearData.tenth_total_marks} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-8">
+                    <h3 className="text-lg font-medium text-white border-b border-white/10 pb-2 mb-4">12th Standard Details</h3>
+                    <div className="grid md:grid-cols-2 gap-4 gap-y-6">
+                      <Field label="District" value={firstYearData.twelfth_district} />
+                      <Field label="Block" value={firstYearData.twelfth_block} />
+                      <div className="col-span-2">
+                        <Field label="School" value={firstYearData.twelfth_school} />
+                      </div>
+                      <div className="col-span-2 bg-white/5 p-4 rounded-lg">
+                        <h4 className="text-sm font-medium text-text-secondary mb-3">12th Marks (Out of 100 per subject)</h4>
+                        <div className="grid grid-cols-3 gap-4 mb-4">
+                          <Field label="Language" value={firstYearData.twelfth_lang_mark} />
+                          <Field label="English" value={firstYearData.twelfth_eng_mark} />
+                          <Field label="Total (Out of 600)" value={firstYearData.twelfth_total_marks} />
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <Field label={firstYearData.twelfth_sub1_name || "Subject 1"} value={firstYearData.twelfth_sub1_mark} />
+                          <Field label={firstYearData.twelfth_sub2_name || "Subject 2"} value={firstYearData.twelfth_sub2_mark} />
+                          <Field label={firstYearData.twelfth_sub3_name || "Subject 3"} value={firstYearData.twelfth_sub3_mark} />
+                          <Field label={firstYearData.twelfth_sub4_name || "Subject 4"} value={firstYearData.twelfth_sub4_mark} />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 

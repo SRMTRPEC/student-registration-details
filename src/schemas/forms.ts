@@ -71,11 +71,37 @@ export const firstYearDataSchema = z.object({
   first_graduate_certificate_number: z.string().refine(val => !val || val.startsWith("TN-"), "Must start with TN-").optional(),
   emis_number: z.string().min(1, "EMIS Number is required"),
   
-  district: z.string().min(1, "District is required"),
-  block: z.string().min(1, "Block is required"),
-  school: z.string().min(1, "School is required"),
-  
-  date_of_document_submission: z.string().min(1, "Date of Submission is required"),
+  district: z.string().optional(),
+  block: z.string().optional(),
+  school: z.string().optional(),
+  date_of_document_submission: z.string().min(1, "Date of Document Submission is required"),
+
+  // 10th Details
+  tenth_district: z.string().min(1, "10th District is required"),
+  tenth_block: z.string().min(1, "10th Block is required"),
+  tenth_school: z.string().min(1, "10th School is required"),
+  tenth_total_marks: z.string().min(1, "Required").regex(/^\d+$/, "Must be a number"),
+  tenth_lang_mark: z.string().min(1, "Required").regex(/^\d+$/, "Must be a number"),
+  tenth_eng_mark: z.string().min(1, "Required").regex(/^\d+$/, "Must be a number"),
+  tenth_math_mark: z.string().min(1, "Required").regex(/^\d+$/, "Must be a number"),
+  tenth_sci_mark: z.string().min(1, "Required").regex(/^\d+$/, "Must be a number"),
+  tenth_soc_mark: z.string().min(1, "Required").regex(/^\d+$/, "Must be a number"),
+
+  // 12th Details
+  twelfth_district: z.string().min(1, "12th District is required"),
+  twelfth_block: z.string().min(1, "12th Block is required"),
+  twelfth_school: z.string().min(1, "12th School is required"),
+  twelfth_total_marks: z.string().min(1, "Required").regex(/^\d+$/, "Must be a number"),
+  twelfth_lang_mark: z.string().min(1, "Required").regex(/^\d+$/, "Must be a number"),
+  twelfth_eng_mark: z.string().min(1, "Required").regex(/^\d+$/, "Must be a number"),
+  twelfth_sub1_name: z.string().min(1, "Required"),
+  twelfth_sub1_mark: z.string().min(1, "Required").regex(/^\d+$/, "Must be a number"),
+  twelfth_sub2_name: z.string().min(1, "Required"),
+  twelfth_sub2_mark: z.string().min(1, "Required").regex(/^\d+$/, "Must be a number"),
+  twelfth_sub3_name: z.string().min(1, "Required"),
+  twelfth_sub3_mark: z.string().min(1, "Required").regex(/^\d+$/, "Must be a number"),
+  twelfth_sub4_name: z.string().min(1, "Required"),
+  twelfth_sub4_mark: z.string().min(1, "Required").regex(/^\d+$/, "Must be a number"),
 }).superRefine((data, ctx) => {
   if (data.residence_type === 'Dayscholar') {
     if (!data.transport_mode) {

@@ -148,13 +148,57 @@ export const PrintableReport = ({ basicData, firstYearData, documentsData }: Pri
           <div><strong className="text-gray-700">Guardian Income:</strong> {firstYearData?.guardian_income || '-'}</div>
           <div><strong className="text-gray-700">Income Cert No:</strong> {firstYearData?.income_certificate_number || '-'}</div>
           
+          <div className="col-span-2 space-y-4 my-4">
+            <div className="border border-gray-300 rounded overflow-hidden">
+              <div className="bg-gray-100 px-4 py-2 font-bold border-b border-gray-300">10th Standard Details</div>
+              <div className="p-4 grid grid-cols-3 gap-4 text-sm">
+                <div><strong className="text-gray-700">District:</strong> {firstYearData?.tenth_district || '-'}</div>
+                <div><strong className="text-gray-700">Block:</strong> {firstYearData?.tenth_block || '-'}</div>
+                <div className="col-span-3"><strong className="text-gray-700">School:</strong> {firstYearData?.tenth_school || '-'}</div>
+                
+                <div className="col-span-3 mt-2">
+                  <strong className="text-gray-700 block mb-2 border-b border-gray-300 pb-1">10th Marks (Out of 100)</strong>
+                  <div className="grid grid-cols-6 gap-2">
+                    <div><strong className="text-gray-600 block text-xs">Language</strong>{firstYearData?.tenth_lang_mark || '-'}</div>
+                    <div><strong className="text-gray-600 block text-xs">English</strong>{firstYearData?.tenth_eng_mark || '-'}</div>
+                    <div><strong className="text-gray-600 block text-xs">Maths</strong>{firstYearData?.tenth_math_mark || '-'}</div>
+                    <div><strong className="text-gray-600 block text-xs">Science</strong>{firstYearData?.tenth_sci_mark || '-'}</div>
+                    <div><strong className="text-gray-600 block text-xs">Social</strong>{firstYearData?.tenth_soc_mark || '-'}</div>
+                    <div><strong className="text-gray-800 block text-xs">Total</strong>{firstYearData?.tenth_total_marks || '-'}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="border border-gray-300 rounded overflow-hidden">
+              <div className="bg-gray-100 px-4 py-2 font-bold border-b border-gray-300">12th Standard Details</div>
+              <div className="p-4 grid grid-cols-3 gap-4 text-sm">
+                <div><strong className="text-gray-700">EMIS Number:</strong> {firstYearData?.emis_number || '-'}</div>
+                <div><strong className="text-gray-700">District:</strong> {firstYearData?.twelfth_district || '-'}</div>
+                <div><strong className="text-gray-700">Block:</strong> {firstYearData?.twelfth_block || '-'}</div>
+                <div className="col-span-3"><strong className="text-gray-700">School:</strong> {firstYearData?.twelfth_school || '-'}</div>
+
+                <div className="col-span-3 mt-2">
+                  <strong className="text-gray-700 block mb-2 border-b border-gray-300 pb-1">12th Marks (Out of 100)</strong>
+                  <div className="grid grid-cols-3 gap-2 mb-2">
+                    <div><strong className="text-gray-600 block text-xs">Language</strong>{firstYearData?.twelfth_lang_mark || '-'}</div>
+                    <div><strong className="text-gray-600 block text-xs">English</strong>{firstYearData?.twelfth_eng_mark || '-'}</div>
+                    <div><strong className="text-gray-800 block text-xs">Total (600)</strong>{firstYearData?.twelfth_total_marks || '-'}</div>
+                  </div>
+                  <div className="grid grid-cols-4 gap-2 border-t border-gray-200 pt-2">
+                    <div><strong className="text-gray-600 block text-xs truncate" title={firstYearData?.twelfth_sub1_name}>{firstYearData?.twelfth_sub1_name || 'Subject 1'}</strong>{firstYearData?.twelfth_sub1_mark || '-'}</div>
+                    <div><strong className="text-gray-600 block text-xs truncate" title={firstYearData?.twelfth_sub2_name}>{firstYearData?.twelfth_sub2_name || 'Subject 2'}</strong>{firstYearData?.twelfth_sub2_mark || '-'}</div>
+                    <div><strong className="text-gray-600 block text-xs truncate" title={firstYearData?.twelfth_sub3_name}>{firstYearData?.twelfth_sub3_name || 'Subject 3'}</strong>{firstYearData?.twelfth_sub3_mark || '-'}</div>
+                    <div><strong className="text-gray-600 block text-xs truncate" title={firstYearData?.twelfth_sub4_name}>{firstYearData?.twelfth_sub4_name || 'Subject 4'}</strong>{firstYearData?.twelfth_sub4_mark || '-'}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <div><strong className="text-gray-700">First Graduate:</strong> {firstYearData?.first_graduate || '-'}</div>
           <div><strong className="text-gray-700">First Grad Cert No:</strong> {firstYearData?.first_graduate_certificate_number || '-'}</div>
           
-          <div><strong className="text-gray-700">EMIS Number:</strong> {firstYearData?.emis_number || '-'}</div>
-          <div><strong className="text-gray-700">District:</strong> {firstYearData?.district || '-'}</div>
-          <div><strong className="text-gray-700">Block:</strong> {firstYearData?.block || '-'}</div>
-          <div className="col-span-2"><strong className="text-gray-700">School:</strong> {firstYearData?.school || '-'}</div>
           <div><strong className="text-gray-700">Blood Group:</strong> {firstYearData?.blood_group || '-'}</div>
           <div><strong className="text-gray-700">Mother Tongue:</strong> {firstYearData?.mother_tongue || '-'}</div>
         </div>

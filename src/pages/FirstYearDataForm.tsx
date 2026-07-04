@@ -31,8 +31,6 @@ export const FirstYearDataForm = () => {
   const firstGraduate = watch('first_graduate');
   const gender = watch('gender');
   const community = watch('community');
-  const district = watch('district');
-  const block = watch('block');
   const residenceType = watch('residence_type');
   const transportMode = watch('transport_mode');
   const siblingsCount = parseInt(watch('siblings_count') || '0', 10);
@@ -46,20 +44,28 @@ export const FirstYearDataForm = () => {
   const permState = watch('perm_state');
   const permPincode = watch('perm_pincode');
 
-  // Prepare options for dependent dropdowns
-  const districtOptions = Object.keys(schoolData).sort().map(d => ({ value: d, label: d }));
-  
-  const blockOptions = district && schoolData[district] 
-    ? Object.keys(schoolData[district]).sort().map(b => ({ value: b, label: b }))
-    : [];
-    
-  const schoolOptions = district && block && schoolData[district]?.[block]
-    ? schoolData[district][block].sort().map(s => ({ value: s, label: s }))
-    : [];
+  const tenthDistrict = watch('tenth_district');
+  const tenthBlock = watch('tenth_block');
+  const twelfthDistrict = watch('twelfth_district');
+  const twelfthBlock = watch('twelfth_block');
+
+  const tenthDistrictOptions = Object.keys(schoolData).sort().map(d => ({ value: d, label: d }));
+  const tenthBlockOptions = tenthDistrict && schoolData[tenthDistrict] 
+    ? Object.keys(schoolData[tenthDistrict]).sort().map(b => ({ value: b, label: b })) : [];
+  const tenthSchoolOptions = tenthDistrict && tenthBlock && schoolData[tenthDistrict]?.[tenthBlock]
+    ? schoolData[tenthDistrict][tenthBlock].sort().map(s => ({ value: s, label: s })) : [];
+
+  const twelfthDistrictOptions = Object.keys(schoolData).sort().map(d => ({ value: d, label: d }));
+  const twelfthBlockOptions = twelfthDistrict && schoolData[twelfthDistrict] 
+    ? Object.keys(schoolData[twelfthDistrict]).sort().map(b => ({ value: b, label: b })) : [];
+  const twelfthSchoolOptions = twelfthDistrict && twelfthBlock && schoolData[twelfthDistrict]?.[twelfthBlock]
+    ? schoolData[twelfthDistrict][twelfthBlock].sort().map(s => ({ value: s, label: s })) : [];
 
   // Clear dependent fields when parent changes, safely ignoring initial load
-  const prevDistrict = useRef<string | undefined>(district);
-  const prevBlock = useRef<string | undefined>(block);
+  const prevTenthDistrict = useRef<string | undefined>(tenthDistrict);
+  const prevTenthBlock = useRef<string | undefined>(tenthBlock);
+  const prevTwelfthDistrict = useRef<string | undefined>(twelfthDistrict);
+  const prevTwelfthBlock = useRef<string | undefined>(twelfthBlock);
   const prevResidence = useRef<string | undefined>(residenceType);
   const prevTransport = useRef<string | undefined>(transportMode);
   const prevCommunity = useRef<string | undefined>(community);
@@ -74,20 +80,34 @@ export const FirstYearDataForm = () => {
   }, [community, setValue]);
 
   useEffect(() => {
-    // Only clear if the previous value was set (not initial mount/draft load) and it actually changed
-    if (prevDistrict.current !== undefined && prevDistrict.current !== district) {
-      setValue('block', '', { shouldValidate: false });
-      setValue('school', '', { shouldValidate: false });
+    if (prevTenthDistrict.current !== undefined && prevTenthDistrict.current !== tenthDistrict) {
+      setValue('tenth_block', '', { shouldValidate: false });
+      setValue('tenth_school', '', { shouldValidate: false });
     }
-    prevDistrict.current = district;
-  }, [district, setValue]);
+    prevTenthDistrict.current = tenthDistrict;
+  }, [tenthDistrict, setValue]);
 
   useEffect(() => {
-    if (prevBlock.current !== undefined && prevBlock.current !== block) {
-      setValue('school', '', { shouldValidate: false });
+    if (prevTenthBlock.current !== undefined && prevTenthBlock.current !== tenthBlock) {
+      setValue('tenth_school', '', { shouldValidate: false });
     }
-    prevBlock.current = block;
-  }, [block, setValue]);
+    prevTenthBlock.current = tenthBlock;
+  }, [tenthBlock, setValue]);
+
+  useEffect(() => {
+    if (prevTwelfthDistrict.current !== undefined && prevTwelfthDistrict.current !== twelfthDistrict) {
+      setValue('twelfth_block', '', { shouldValidate: false });
+      setValue('twelfth_school', '', { shouldValidate: false });
+    }
+    prevTwelfthDistrict.current = twelfthDistrict;
+  }, [twelfthDistrict, setValue]);
+
+  useEffect(() => {
+    if (prevTwelfthBlock.current !== undefined && prevTwelfthBlock.current !== twelfthBlock) {
+      setValue('twelfth_school', '', { shouldValidate: false });
+    }
+    prevTwelfthBlock.current = twelfthBlock;
+  }, [twelfthBlock, setValue]);
 
   useEffect(() => {
     if (prevResidence.current !== undefined && prevResidence.current !== residenceType) {
@@ -198,7 +218,10 @@ export const FirstYearDataForm = () => {
         }
       }
     } else if (currentStep === 2) {
-      fieldsToValidate = ['religion', 'community', 'caste_name', 'father_income', 'mother_income', 'guardian_income', 'first_graduate', 'emis_number', 'district', 'block', 'school', 'date_of_document_submission', ...(community === 'Other' ? ['community_other'] : []), ...(community !== 'OC' ? ['community_certificate_number'] : [])];
+      fieldsToValidate = ['religion', 'community', 'caste_name', 'father_income', 'mother_income', 'guardian_income', 'first_graduate', 'emis_number', 'date_of_document_submission', 
+      'tenth_district', 'tenth_block', 'tenth_school', 'tenth_total_marks', 'tenth_lang_mark', 'tenth_eng_mark', 'tenth_math_mark', 'tenth_sci_mark', 'tenth_soc_mark',
+      'twelfth_district', 'twelfth_block', 'twelfth_school', 'twelfth_total_marks', 'twelfth_lang_mark', 'twelfth_eng_mark', 'twelfth_sub1_name', 'twelfth_sub1_mark', 'twelfth_sub2_name', 'twelfth_sub2_mark', 'twelfth_sub3_name', 'twelfth_sub3_mark', 'twelfth_sub4_name', 'twelfth_sub4_mark',
+      ...(community === 'Other' ? ['community_other'] : []), ...(community !== 'OC' ? ['community_certificate_number'] : [])];
     }
     
     const isStepValid = await trigger(fieldsToValidate);
@@ -515,37 +538,65 @@ export const FirstYearDataForm = () => {
                   )}
                   
                   <div className="md:col-span-2 border-t border-white/10 pt-6 mt-2">
-                    <h3 className="text-lg font-medium text-white mb-4">School Details</h3>
+                    <h3 className="text-lg font-medium text-white mb-4">10th Standard Details</h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <Select label="District" {...register('tenth_district')} error={errors.tenth_district?.message} required options={tenthDistrictOptions} />
+                      <Select label="Block" {...register('tenth_block')} error={errors.tenth_block?.message} required options={tenthBlockOptions} disabled={!tenthDistrict} />
+                      <div className="md:col-span-2">
+                        <SearchableSelect label="School" {...register('tenth_school')} value={watch('tenth_school')} error={errors.tenth_school?.message} required options={tenthSchoolOptions} disabled={!tenthBlock} />
+                      </div>
+                      
+                      <div className="md:col-span-2 mt-2">
+                        <h4 className="text-sm font-medium text-text-secondary mb-3">10th Marks (Out of 100 per subject)</h4>
+                        <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+                          <Input label="Language" maxLength={3} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('tenth_lang_mark')} error={errors.tenth_lang_mark?.message} required />
+                          <Input label="English" maxLength={3} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('tenth_eng_mark')} error={errors.tenth_eng_mark?.message} required />
+                          <Input label="Maths" maxLength={3} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('tenth_math_mark')} error={errors.tenth_math_mark?.message} required />
+                          <Input label="Science" maxLength={3} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('tenth_sci_mark')} error={errors.tenth_sci_mark?.message} required />
+                          <Input label="Social" maxLength={3} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('tenth_soc_mark')} error={errors.tenth_soc_mark?.message} required />
+                          <Input label="Total Mark" maxLength={3} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('tenth_total_marks')} error={errors.tenth_total_marks?.message} required className="bg-primary/5" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="md:col-span-2 border-t border-white/10 pt-6 mt-2">
+                    <h3 className="text-lg font-medium text-white mb-4">12th Standard Details</h3>
                     <div className="grid md:grid-cols-2 gap-6">
                       <Input label="EMIS Number" {...register('emis_number')} error={errors.emis_number?.message} required className="md:col-span-2" />
-                      
-                      <Select 
-                        label="District" 
-                        {...register('district')} 
-                        error={errors.district?.message} 
-                        required 
-                        options={districtOptions} 
-                      />
-                      
-                      <Select 
-                        label="Block" 
-                        {...register('block')} 
-                        error={errors.block?.message} 
-                        required 
-                        options={blockOptions} 
-                        disabled={!district}
-                      />
-                      
+                      <Select label="District" {...register('twelfth_district')} error={errors.twelfth_district?.message} required options={twelfthDistrictOptions} />
+                      <Select label="Block" {...register('twelfth_block')} error={errors.twelfth_block?.message} required options={twelfthBlockOptions} disabled={!twelfthDistrict} />
                       <div className="md:col-span-2">
-                        <SearchableSelect 
-                          label="School" 
-                          {...register('school')}
-                          value={watch('school')}
-                          error={errors.school?.message} 
-                          required 
-                          options={schoolOptions}
-                          disabled={!block}
-                        />
+                        <SearchableSelect label="School" {...register('twelfth_school')} value={watch('twelfth_school')} error={errors.twelfth_school?.message} required options={twelfthSchoolOptions} disabled={!twelfthBlock} />
+                      </div>
+                      
+                      <div className="md:col-span-2 mt-2">
+                        <h4 className="text-sm font-medium text-text-secondary mb-3">12th Marks (Out of 100 per subject)</h4>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-4">
+                          <Input label="Language Mark" maxLength={3} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('twelfth_lang_mark')} error={errors.twelfth_lang_mark?.message} required />
+                          <Input label="English Mark" maxLength={3} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('twelfth_eng_mark')} error={errors.twelfth_eng_mark?.message} required />
+                          <Input label="Total Mark (Out of 600)" maxLength={3} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('twelfth_total_marks')} error={errors.twelfth_total_marks?.message} required className="bg-primary/5" />
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-6 mb-4 p-4 bg-white/5 rounded-lg border border-white/5">
+                          <div>
+                            <Input label="Subject 1 Name" placeholder="e.g. Physics" {...register('twelfth_sub1_name')} error={errors.twelfth_sub1_name?.message} required />
+                            <div className="mt-2"><Input label="Subject 1 Mark" maxLength={3} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('twelfth_sub1_mark')} error={errors.twelfth_sub1_mark?.message} required /></div>
+                          </div>
+                          <div>
+                            <Input label="Subject 2 Name" placeholder="e.g. Chemistry" {...register('twelfth_sub2_name')} error={errors.twelfth_sub2_name?.message} required />
+                            <div className="mt-2"><Input label="Subject 2 Mark" maxLength={3} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('twelfth_sub2_mark')} error={errors.twelfth_sub2_mark?.message} required /></div>
+                          </div>
+                          <div>
+                            <Input label="Subject 3 Name" placeholder="e.g. Maths" {...register('twelfth_sub3_name')} error={errors.twelfth_sub3_name?.message} required />
+                            <div className="mt-2"><Input label="Subject 3 Mark" maxLength={3} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('twelfth_sub3_mark')} error={errors.twelfth_sub3_mark?.message} required /></div>
+                          </div>
+                          <div>
+                            <Input label="Subject 4 Name" placeholder="e.g. Computer Science" {...register('twelfth_sub4_name')} error={errors.twelfth_sub4_name?.message} required />
+                            <div className="mt-2"><Input label="Subject 4 Mark" maxLength={3} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('twelfth_sub4_mark')} error={errors.twelfth_sub4_mark?.message} required /></div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
