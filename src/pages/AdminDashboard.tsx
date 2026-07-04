@@ -116,6 +116,7 @@ export const AdminDashboard = () => {
           "Residence Type": fyd.residence_type,
           "Transport Mode": fyd.transport_mode,
           "Boarding Point": fyd.boarding_point,
+          "Outside Stay Details": fyd.outside_stay_details,
           "Date of Birth": fyd.dob,
           "Gender": fyd.gender,
           "Gender (Other)": fyd.gender_other,

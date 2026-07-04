@@ -76,6 +76,9 @@ export const FirstYearDataForm = () => {
         setValue('transport_mode', '', { shouldValidate: false });
         setValue('boarding_point', '', { shouldValidate: false });
       }
+      if (residenceType !== 'Outside Stay') {
+        setValue('outside_stay_details', '', { shouldValidate: false });
+      }
     }
     prevResidence.current = residenceType;
   }, [residenceType, setValue]);
@@ -142,7 +145,7 @@ export const FirstYearDataForm = () => {
   const handleNext = async () => {
     let fieldsToValidate: any[] = [];
     if (currentStep === 0) {
-      fieldsToValidate = ['email', 'student_name', 'programme', 'course', 'admission_category', 'application_number', 'mobile_number', 'alternative_number', 'email_id', 'dob', 'gender', 'blood_group', 'mother_tongue', 'aadhaar_number', 'field_of_interest', 'residence_type', ...(residenceType === 'Dayscholar' ? ['transport_mode'] : []), ...(transportMode === 'College Bus' ? ['boarding_point'] : []), ...(gender === 'Other' ? ['gender_other'] : [])];
+      fieldsToValidate = ['email', 'student_name', 'programme', 'course', 'admission_category', 'application_number', 'mobile_number', 'alternative_number', 'email_id', 'dob', 'gender', 'blood_group', 'mother_tongue', 'aadhaar_number', 'field_of_interest', 'residence_type', ...(residenceType === 'Dayscholar' ? ['transport_mode'] : []), ...(transportMode === 'College Bus' ? ['boarding_point'] : []), ...(residenceType === 'Outside Stay' ? ['outside_stay_details'] : []), ...(gender === 'Other' ? ['gender_other'] : [])];
     } else if (currentStep === 1) {
       fieldsToValidate = ['father_name', 'father_mobile', 'father_occupation', 'mother_name', 'mother_mobile', 'mother_occupation', 'single_parent', 'siblings_count'];
       
@@ -310,7 +313,7 @@ export const FirstYearDataForm = () => {
                         {...register('residence_type')} 
                         error={errors.residence_type?.message} 
                         required 
-                        options={[{ value: 'Dayscholar', label: 'Dayscholar' }, { value: 'Hosteller', label: 'Hosteller' }]} 
+                        options={[{ value: 'Dayscholar', label: 'Dayscholar' }, { value: 'Hosteller', label: 'Hosteller' }, { value: 'Outside Stay', label: 'Outside Stay' }]} 
                       />
                       
                       {residenceType === 'Dayscholar' && (
@@ -330,6 +333,18 @@ export const FirstYearDataForm = () => {
                             {...register('boarding_point')} 
                             error={errors.boarding_point?.message} 
                             required 
+                          />
+                        </div>
+                      )}
+
+                      {residenceType === 'Outside Stay' && (
+                        <div className="md:col-span-2">
+                          <Input 
+                            label="Name of PG / Room Details" 
+                            {...register('outside_stay_details')} 
+                            error={errors.outside_stay_details?.message} 
+                            required 
+                            placeholder="Enter PG name, area, or room address"
                           />
                         </div>
                       )}

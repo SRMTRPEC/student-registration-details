@@ -27,6 +27,7 @@ export const firstYearDataSchema = z.object({
   residence_type: z.string().min(1, "Residence Type is required"),
   transport_mode: z.string().optional(),
   boarding_point: z.string().optional(),
+  outside_stay_details: z.string().optional(),
   
   father_name: z.string().min(2, "Father Name is required"),
   father_mobile: z.string().regex(/^[0-9]{10}$/, "Must be a 10-digit number"),
@@ -72,6 +73,12 @@ export const firstYearDataSchema = z.object({
         path: ["boarding_point"],
       });
     }
+  } else if (data.residence_type === 'Outside Stay' && !data.outside_stay_details) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Please enter the name of the PG or room you are staying in",
+      path: ["outside_stay_details"],
+    });
   }
 });
 

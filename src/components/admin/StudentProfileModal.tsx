@@ -190,6 +190,9 @@ export const StudentProfileModal = ({ folderNumber, onClose, startInPrintMode }:
                         )}
                       </>
                     )}
+                    {firstYearData.residence_type === 'Outside Stay' && (
+                      <Field label="Outside Stay Details" value={firstYearData.outside_stay_details} />
+                    )}
                     <Field label="Date of Birth" value={firstYearData.dob} />
                     <Field label="Gender" value={firstYearData.gender === 'Other' ? firstYearData.gender_other : firstYearData.gender} />
                     <Field label="Aadhaar Number" value={firstYearData.aadhaar_number} />

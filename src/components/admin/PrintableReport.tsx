@@ -60,14 +60,20 @@ export const PrintableReport = ({ basicData, firstYearData, documentsData }: Pri
           <div><strong className="text-gray-700">Mobile:</strong> {basicData?.mobile_number}</div>
           <div className="col-span-2"><strong className="text-gray-700">Email:</strong> {basicData?.email}</div>
           <div><strong className="text-gray-700">Residence Type:</strong> {firstYearData?.residence_type || '-'}</div>
+          
           {firstYearData?.residence_type === 'Dayscholar' && (
             <>
               <div><strong className="text-gray-700">Transport:</strong> {firstYearData?.transport_mode || '-'}</div>
               {firstYearData?.transport_mode === 'College Bus' && (
-                <div className="col-span-2"><strong className="text-gray-700">Boarding Point:</strong> {firstYearData?.boarding_point || '-'}</div>
+                <div><strong className="text-gray-700">Boarding Pt:</strong> {firstYearData?.boarding_point || '-'}</div>
               )}
             </>
           )}
+
+          {firstYearData?.residence_type === 'Outside Stay' && (
+            <div className="col-span-2"><strong className="text-gray-700">Outside Stay Details:</strong> {firstYearData?.outside_stay_details || '-'}</div>
+          )}
+          
           <div><strong className="text-gray-700">Programme:</strong> {basicData?.programme}</div>
           <div><strong className="text-gray-700">Course:</strong> {basicData?.course}</div>
           <div><strong className="text-gray-700">Admission Category:</strong> {basicData?.admission_category}</div>
