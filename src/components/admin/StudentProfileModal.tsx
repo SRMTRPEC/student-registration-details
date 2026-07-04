@@ -134,7 +134,7 @@ export const StudentProfileModal = ({ applicationNumber, onClose, startInPrintMo
           <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/5">
             <div>
               <h2 className="text-2xl font-bold">Student Profile</h2>
-              <p className="text-text-secondary">Folder: <span className="font-mono text-white">{applicationNumber}</span></p>
+              <p className="text-text-secondary">Application Number: <span className="font-mono text-white">{applicationNumber}</span></p>
             </div>
             <div className="flex items-center gap-3">
               {!isLoading && firstYearData && (
