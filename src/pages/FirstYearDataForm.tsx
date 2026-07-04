@@ -355,12 +355,7 @@ export const FirstYearDataForm = () => {
                   <Input label="Student Name" {...register('student_name')} error={errors.student_name?.message} required className="md:col-span-2" />
                   
                   <Select label="Programme" {...register('programme')} error={errors.programme?.message} required options={[{ value: 'BE & B.Tech', label: 'BE & B.Tech' }, { value: 'M.E', label: 'M.E' }, { value: 'MBA', label: 'MBA' }]} />
-                  <Select label="Course" {...register('course')} error={errors.course?.message} required options={[
-                      { value: 'B.E Civil Engineering', label: 'B.E Civil Engineering' },
-                      { value: 'B.E Computer Science and Engineering', label: 'B.E Computer Science and Engineering' },
-                      { value: 'B.Tech Information Technology', label: 'B.Tech Information Technology' },
-                      { value: 'MBA', label: 'MBA' }
-                  ]} />
+                  <Input label="Course/Department" {...register('course')} error={errors.course?.message} required placeholder="e.g. Computer Science" />
                   
                   <Select label="Admission Category" {...register('admission_category')} error={errors.admission_category?.message} required options={[{ value: 'Management Quota', label: 'Management Quota' }, { value: 'Government Quota (Counseling)', label: 'Government Quota (Counseling)' }]} />
                   <Input label="Application Number" {...register('application_number')} error={errors.application_number?.message} required readOnly className="bg-white/5 cursor-not-allowed text-text-secondary" />
