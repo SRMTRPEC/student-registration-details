@@ -25,6 +25,14 @@ export const StudentAccess = () => {
   const [department, setDepartment] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  // Simple client-side hash function for basic obfuscation
+  const hashPassword = async (pwd: string) => {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(pwd);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+  };
+
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
@@ -49,39 +57,41 @@ export const StudentAccess = () => {
     }
 
     try {
-      const dummyEmail = `${appNumber.trim()}@student-registration.com`;
-      
+      const hashedPassword = await hashPassword(password);
+
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: dummyEmail,
-          password: password
-        });
-        
-        if (error) throw error;
+        const { data, error } = await supabase
+          .from('student_profiles')
+          .select('*')
+          .eq('application_number', appNumber.trim())
+          .eq('password', hashedPassword)
+          .single();
+          
+        if (error || !data) throw new Error("Invalid Application Number or Password");
         
       } else {
         // Register flow
-        const { data: authData, error: authError } = await supabase.auth.signUp({
-          email: dummyEmail,
-          password: password,
+        const { data: existingUser } = await supabase
+          .from('student_profiles')
+          .select('id')
+          .eq('application_number', appNumber.trim())
+          .maybeSingle();
+
+        if (existingUser) throw new Error("An account with this Application Number already exists");
+
+        // Save to student_profiles natively
+        const { error: profileError } = await supabase.from('student_profiles').insert({
+          id: crypto.randomUUID(), // Generate a UUID since we aren't using Supabase Auth anymore
+          application_number: appNumber.trim(),
+          name,
+          email,
+          mobile_number: mobile,
+          course,
+          department,
+          password: hashedPassword
         });
         
-        if (authError) throw authError;
-        
-        if (authData.user) {
-          // Save to student_profiles
-          const { error: profileError } = await supabase.from('student_profiles').insert({
-            id: authData.user.id,
-            application_number: appNumber.trim(),
-            name,
-            email,
-            mobile_number: mobile,
-            course,
-            department
-          });
-          
-          if (profileError) throw profileError;
-        }
+        if (profileError) throw profileError;
       }
 
       localStorage.setItem('student_application_number', appNumber.trim());
