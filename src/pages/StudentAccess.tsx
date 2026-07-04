@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { LogIn, UserPlus, ArrowLeft } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
+import { Select } from '../components/ui/Select';
 import { Button } from '../components/ui/Button';
 import { supabase } from '../supabase/client';
 
@@ -154,8 +155,8 @@ export const StudentAccess = () => {
                       <Input label="Mobile Number" type="tel" placeholder="9876543210" value={mobile} onChange={(e) => setMobile(e.target.value)} required />
                     </motion.div>
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="md:col-span-2 grid md:grid-cols-2 gap-4">
-                      <Input label="Course" type="text" placeholder="e.g. B.E" value={course} onChange={(e) => setCourse(e.target.value)} required />
-                      <Input label="Department" type="text" placeholder="e.g. Computer Science" value={department} onChange={(e) => setDepartment(e.target.value)} required />
+                      <Select label="Course" value={course} onChange={(e) => setCourse(e.target.value)} required options={[{ value: 'BE & B.Tech', label: 'BE & B.Tech' }, { value: 'M.E', label: 'M.E' }, { value: 'MBA', label: 'MBA' }]} />
+                      <Select label="Department" value={department} onChange={(e) => setDepartment(e.target.value)} required options={[{ value: 'B.E Civil Engineering', label: 'B.E Civil Engineering' }, { value: 'B.E Computer Science and Engineering', label: 'B.E Computer Science and Engineering' }, { value: 'B.Tech Information Technology', label: 'B.Tech Information Technology' }, { value: 'MBA', label: 'MBA' }]} />
                     </motion.div>
                   </>
                 )}
