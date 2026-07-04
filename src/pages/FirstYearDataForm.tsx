@@ -36,6 +36,15 @@ export const FirstYearDataForm = () => {
   const residenceType = watch('residence_type');
   const transportMode = watch('transport_mode');
   const siblingsCount = parseInt(watch('siblings_count') || '0', 10);
+  const isSameAddress = watch('is_same_address');
+
+  // Address sync values
+  const permAddress1 = watch('perm_address_line_1');
+  const permAddress2 = watch('perm_address_line_2');
+  const permVillage = watch('perm_village_city');
+  const permDistrict = watch('perm_district');
+  const permState = watch('perm_state');
+  const permPincode = watch('perm_pincode');
 
   // Prepare options for dependent dropdowns
   const districtOptions = Object.keys(schoolData).sort().map(d => ({ value: d, label: d }));
@@ -121,6 +130,24 @@ export const FirstYearDataForm = () => {
     return () => subscription.unsubscribe();
   }, [watch, setValue]);
 
+  // Sync addresses if "Yes"
+  useEffect(() => {
+    if (isSameAddress === 'Yes') {
+      setValue('comm_address_line_1', permAddress1 || '', { shouldValidate: true });
+      setValue('comm_address_line_2', permAddress2 || '', { shouldValidate: true });
+      setValue('comm_village_city', permVillage || '', { shouldValidate: true });
+      setValue('comm_district', permDistrict || '', { shouldValidate: true });
+      setValue('comm_state', permState || '', { shouldValidate: true });
+      setValue('comm_pincode', permPincode || '', { shouldValidate: true });
+    }
+  }, [isSameAddress, permAddress1, permAddress2, permVillage, permDistrict, permState, permPincode, setValue]);
+
+  // Default state to Tamil Nadu if empty
+  useEffect(() => {
+    if (!permState) setValue('perm_state', 'Tamil Nadu', { shouldValidate: false });
+    if (!watch('comm_state') && isSameAddress === 'No') setValue('comm_state', 'Tamil Nadu', { shouldValidate: false });
+  }, [permState, isSameAddress, setValue, watch]);
+
   // Load draft data on mount
   useEffect(() => {
     const fn = localStorage.getItem('student_folder_number');
@@ -155,7 +182,11 @@ export const FirstYearDataForm = () => {
   const handleNext = async () => {
     let fieldsToValidate: any[] = [];
     if (currentStep === 0) {
-      fieldsToValidate = ['email', 'student_name', 'programme', 'course', 'admission_category', 'application_number', 'mobile_number', 'alternative_number', 'email_id', 'dob', 'gender', 'blood_group', 'mother_tongue', 'aadhaar_number', 'field_of_interest', 'residence_type', ...(residenceType === 'Dayscholar' ? ['transport_mode'] : []), ...(transportMode === 'College Bus' ? ['boarding_point'] : []), ...(residenceType === 'Outside Stay' ? ['outside_stay_details'] : []), ...(gender === 'Other' ? ['gender_other'] : [])];
+      fieldsToValidate = ['email', 'student_name', 'programme', 'course', 'admission_category', 'application_number', 'mobile_number', 'alternative_number', 'email_id', 'dob', 'gender', 'blood_group', 'mother_tongue', 'aadhaar_number', 'field_of_interest', 'residence_type', 
+        'perm_address_line_1', 'perm_address_line_2', 'perm_village_city', 'perm_district', 'perm_state', 'perm_pincode',
+        'is_same_address',
+        ...(isSameAddress === 'No' ? ['comm_address_line_1', 'comm_address_line_2', 'comm_village_city', 'comm_district', 'comm_state', 'comm_pincode'] : []),
+        ...(residenceType === 'Dayscholar' ? ['transport_mode'] : []), ...(transportMode === 'College Bus' ? ['boarding_point'] : []), ...(residenceType === 'Outside Stay' ? ['outside_stay_details'] : []), ...(gender === 'Other' ? ['gender_other'] : [])];
     } else if (currentStep === 1) {
       fieldsToValidate = ['father_name', 'father_mobile', 'father_occupation', 'mother_name', 'mother_mobile', 'mother_occupation', 'single_parent', 'siblings_count'];
       
@@ -315,6 +346,50 @@ export const FirstYearDataForm = () => {
                   <Input label="Aadhaar Number" {...register('aadhaar_number')} error={errors.aadhaar_number?.message} required />
                   <Input label="Field of Interest (Optional)" {...register('field_of_interest')} error={errors.field_of_interest?.message} />
                   
+                  {/* Addresses */}
+                  <div className="md:col-span-2 border-t border-white/10 pt-6 mt-2">
+                    <h3 className="text-lg font-medium text-white mb-4">Permanent Address</h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <Input label="Address Line 1 (House No)" {...register('perm_address_line_1')} error={errors.perm_address_line_1?.message} required />
+                      <Input label="Address Line 2 (Street)" {...register('perm_address_line_2')} error={errors.perm_address_line_2?.message} required />
+                      <Input label="Village / Town / City" {...register('perm_village_city')} error={errors.perm_village_city?.message} required />
+                      <Input label="District" {...register('perm_district')} error={errors.perm_district?.message} required />
+                      <Input label="State" {...register('perm_state')} error={errors.perm_state?.message} required />
+                      <Input label="PIN Code" maxLength={6} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('perm_pincode')} error={errors.perm_pincode?.message} required />
+                    </div>
+                  </div>
+
+                  <div className="md:col-span-2 border-t border-white/10 pt-6 mt-2">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                      <h3 className="text-lg font-medium text-white mb-2 md:mb-0">Communication Address</h3>
+                      <div className="flex items-center gap-4">
+                        <span className="text-sm text-text-secondary">Same as Permanent Address?</span>
+                        <div className="flex gap-4">
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" value="Yes" {...register('is_same_address')} className="w-4 h-4 text-primary bg-background/50 border-white/10" />
+                            <span className="text-sm">Yes</span>
+                          </label>
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" value="No" {...register('is_same_address')} className="w-4 h-4 text-primary bg-background/50 border-white/10" />
+                            <span className="text-sm">No</span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    {errors.is_same_address?.message && <p className="text-red-500 text-xs mt-1 mb-4">{errors.is_same_address.message}</p>}
+
+                    {isSameAddress === 'No' && (
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <Input label="Address Line 1 (House No)" {...register('comm_address_line_1')} error={errors.comm_address_line_1?.message} required />
+                        <Input label="Address Line 2 (Street)" {...register('comm_address_line_2')} error={errors.comm_address_line_2?.message} required />
+                        <Input label="Village / Town / City" {...register('comm_village_city')} error={errors.comm_village_city?.message} required />
+                        <Input label="District" {...register('comm_district')} error={errors.comm_district?.message} required />
+                        <Input label="State" {...register('comm_state')} error={errors.comm_state?.message} required />
+                        <Input label="PIN Code" maxLength={6} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('comm_pincode')} error={errors.comm_pincode?.message} required />
+                      </div>
+                    )}
+                  </div>
+
                   <div className="md:col-span-2 border-t border-white/10 pt-6 mt-2">
                     <h3 className="text-lg font-medium text-white mb-4">Residence & Transport Details</h3>
                     <div className="grid md:grid-cols-2 gap-6">

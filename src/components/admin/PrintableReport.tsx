@@ -59,6 +59,33 @@ export const PrintableReport = ({ basicData, firstYearData, documentsData }: Pri
           <div><strong className="text-gray-700">Field of Interest:</strong> {firstYearData?.field_of_interest || '-'}</div>
           <div><strong className="text-gray-700">Mobile:</strong> {basicData?.mobile_number}</div>
           <div className="col-span-2"><strong className="text-gray-700">Email:</strong> {basicData?.email}</div>
+          
+          <div className="col-span-2 mt-2">
+            <strong className="text-gray-700 block mb-1 border-b border-gray-300 pb-1">Permanent Address:</strong>
+            <p className="whitespace-pre-wrap text-sm mt-1">
+              {firstYearData?.perm_address_line_1}
+              {firstYearData?.perm_address_line_2 && `\n${firstYearData?.perm_address_line_2}`}
+              {`\n${firstYearData?.perm_village_city}`}
+              {`\n${firstYearData?.perm_district}`}
+              {`\n${firstYearData?.perm_state} - ${firstYearData?.perm_pincode}`}
+            </p>
+          </div>
+
+          <div className="col-span-2 mt-2 mb-2">
+            <strong className="text-gray-700 block mb-1 border-b border-gray-300 pb-1">Communication Address:</strong>
+            <p className="whitespace-pre-wrap text-sm mt-1">
+              {firstYearData?.is_same_address === 'Yes' ? 'Same as Permanent Address' : (
+                <>
+                  {firstYearData?.comm_address_line_1}
+                  {firstYearData?.comm_address_line_2 && `\n${firstYearData?.comm_address_line_2}`}
+                  {`\n${firstYearData?.comm_village_city}`}
+                  {`\n${firstYearData?.comm_district}`}
+                  {`\n${firstYearData?.comm_state} - ${firstYearData?.comm_pincode}`}
+                </>
+              )}
+            </p>
+          </div>
+
           <div><strong className="text-gray-700">Residence Type:</strong> {firstYearData?.residence_type || '-'}</div>
           
           {firstYearData?.residence_type === 'Dayscholar' && (

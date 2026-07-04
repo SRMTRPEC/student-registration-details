@@ -124,6 +124,12 @@ export const AdminDashboard = () => {
           "Mother Tongue": fyd.mother_tongue,
           "Aadhaar Number": fyd.aadhaar_number,
           "Field of Interest": fyd.field_of_interest,
+          
+          "Permanent Address": `${fyd.perm_address_line_1 || ''}, ${fyd.perm_address_line_2 || ''}, ${fyd.perm_village_city || ''}, ${fyd.perm_district || ''}, ${fyd.perm_state || ''} - ${fyd.perm_pincode || ''}`,
+          "Communication Address": fyd.is_same_address === 'Yes' 
+            ? 'Same as Permanent' 
+            : `${fyd.comm_address_line_1 || ''}, ${fyd.comm_address_line_2 || ''}, ${fyd.comm_village_city || ''}, ${fyd.comm_district || ''}, ${fyd.comm_state || ''} - ${fyd.comm_pincode || ''}`,
+
           "Father's Name": fyd.father_name,
           "Father's Mobile": fyd.father_mobile,
           "Mother's Name": fyd.mother_name,

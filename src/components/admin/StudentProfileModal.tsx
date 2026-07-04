@@ -181,6 +181,34 @@ export const StudentProfileModal = ({ folderNumber, onClose, startInPrintMode }:
                     <Field label="Primary Email" value={firstYearData.email} />
                     <Field label="Alternate Email" value={firstYearData.email_id} />
                     <Field label="Mobile Number" value={firstYearData.mobile_number} />
+                    
+                    <h3 className="col-span-2 text-lg font-medium text-white border-b border-white/10 pb-2 mt-4">Address Details</h3>
+                    <div className="col-span-2 md:col-span-1">
+                      <p className="text-xs text-text-secondary uppercase tracking-wider mb-1">Permanent Address</p>
+                      <p className="font-medium text-white bg-white/5 p-3 rounded-lg border border-white/5 whitespace-pre-wrap">
+                        {firstYearData.perm_address_line_1}
+                        {firstYearData.perm_address_line_2 && `\n${firstYearData.perm_address_line_2}`}
+                        {`\n${firstYearData.perm_village_city}`}
+                        {`\n${firstYearData.perm_district}`}
+                        {`\n${firstYearData.perm_state} - ${firstYearData.perm_pincode}`}
+                      </p>
+                    </div>
+                    <div className="col-span-2 md:col-span-1">
+                      <p className="text-xs text-text-secondary uppercase tracking-wider mb-1">Communication Address</p>
+                      <p className="font-medium text-white bg-white/5 p-3 rounded-lg border border-white/5 whitespace-pre-wrap">
+                        {firstYearData.is_same_address === 'Yes' ? 'Same as Permanent Address' : (
+                          <>
+                            {firstYearData.comm_address_line_1}
+                            {firstYearData.comm_address_line_2 && `\n${firstYearData.comm_address_line_2}`}
+                            {`\n${firstYearData.comm_village_city}`}
+                            {`\n${firstYearData.comm_district}`}
+                            {`\n${firstYearData.comm_state} - ${firstYearData.comm_pincode}`}
+                          </>
+                        )}
+                      </p>
+                    </div>
+
+                    <h3 className="col-span-2 text-lg font-medium text-white border-b border-white/10 pb-2 mt-4">Residence Type</h3>
                     <Field label="Residence Type" value={firstYearData.residence_type} />
                     {firstYearData.residence_type === 'Dayscholar' && (
                       <>

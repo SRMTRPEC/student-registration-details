@@ -21,9 +21,27 @@ export const firstYearDataSchema = z.object({
   gender_other: z.string().optional(),
   blood_group: z.string().min(1, "Blood Group is required"),
   mother_tongue: z.string().min(1, "Mother Tongue is required"),
-  aadhaar_number: z.string().regex(/^[0-9]{12}$/, "Must be a 12-digit number"),
+  aadhaar_number: z.string().length(12, "Aadhaar must be 12 digits"),
   field_of_interest: z.string().optional(),
   
+  // Address Details
+  is_same_address: z.enum(['Yes', 'No']),
+  
+  perm_address_line_1: z.string().min(1, "Address Line 1 is required"),
+  perm_address_line_2: z.string().min(1, "Address Line 2 is required"),
+  perm_village_city: z.string().min(1, "Village/Town/City is required"),
+  perm_district: z.string().min(1, "District is required"),
+  perm_state: z.string().min(1, "State is required"),
+  perm_pincode: z.string().length(6, "PIN Code must be 6 digits").regex(/^\d+$/, "Must contain only numbers"),
+  
+  comm_address_line_1: z.string().optional(),
+  comm_address_line_2: z.string().optional(),
+  comm_village_city: z.string().optional(),
+  comm_district: z.string().optional(),
+  comm_state: z.string().optional(),
+  comm_pincode: z.string().optional(),
+
+  // Residence & Transport
   residence_type: z.string().min(1, "Residence Type is required"),
   transport_mode: z.string().optional(),
   boarding_point: z.string().optional(),
@@ -87,6 +105,18 @@ export const firstYearDataSchema = z.object({
       message: "Community Certificate Number is required",
       path: ["community_certificate_number"],
     });
+  }
+
+  // Communication Address validation if not same
+  if (data.is_same_address === 'No') {
+    if (!data.comm_address_line_1) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Required", path: ["comm_address_line_1"] });
+    if (!data.comm_address_line_2) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Required", path: ["comm_address_line_2"] });
+    if (!data.comm_village_city) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Required", path: ["comm_village_city"] });
+    if (!data.comm_district) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Required", path: ["comm_district"] });
+    if (!data.comm_state) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Required", path: ["comm_state"] });
+    if (!data.comm_pincode || data.comm_pincode.length !== 6 || !/^\d+$/.test(data.comm_pincode)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Valid 6-digit PIN Code is required", path: ["comm_pincode"] });
+    }
   }
 });
 

@@ -1,0 +1,14 @@
+ALTER TABLE public.first_year_data
+ADD COLUMN IF NOT EXISTS is_same_address TEXT,
+ADD COLUMN IF NOT EXISTS perm_address_line_1 TEXT,
+ADD COLUMN IF NOT EXISTS perm_address_line_2 TEXT,
+ADD COLUMN IF NOT EXISTS perm_village_city TEXT,
+ADD COLUMN IF NOT EXISTS perm_district TEXT,
+ADD COLUMN IF NOT EXISTS perm_state TEXT,
+ADD COLUMN IF NOT EXISTS perm_pincode TEXT,
+ADD COLUMN IF NOT EXISTS comm_address_line_1 TEXT,
+ADD COLUMN IF NOT EXISTS comm_address_line_2 TEXT,
+ADD COLUMN IF NOT EXISTS comm_village_city TEXT,
+ADD COLUMN IF NOT EXISTS comm_district TEXT,
+ADD COLUMN IF NOT EXISTS comm_state TEXT,
+ADD COLUMN IF NOT EXISTS comm_pincode TEXT;
