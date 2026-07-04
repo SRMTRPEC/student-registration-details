@@ -9,19 +9,22 @@ import { Button } from '../components/ui/Button';
 import { supabase } from '../supabase/client';
 
 const DEGREE_OPTIONS = [
-  { value: 'BE & B.Tech', label: 'BE & B.Tech' },
+  { value: 'B.E', label: 'B.E' },
+  { value: 'B.Tech', label: 'B.Tech' },
   { value: 'M.E', label: 'M.E' },
   { value: 'MBA', label: 'MBA' }
 ];
 
 const DEPARTMENT_MAP: Record<string, { value: string, label: string }[]> = {
-  'BE & B.Tech': [
+  'B.E': [
     { value: 'B.E CIVIL ENGINEERING', label: 'B.E CIVIL ENGINEERING' },
     { value: 'B.E ELECTRONICS AND COMMUNICATION ENGINEERING', label: 'B.E ELECTRONICS AND COMMUNICATION ENGINEERING' },
     { value: 'B.E ELECTRICAL AND ELECTRONICS ENGINEERING', label: 'B.E ELECTRICAL AND ELECTRONICS ENGINEERING' },
     { value: 'B.E COMPUTER SCIENCE AND ENGINEERING', label: 'B.E COMPUTER SCIENCE AND ENGINEERING' },
     { value: 'B.E MECHANICAL ENGINEERING', label: 'B.E MECHANICAL ENGINEERING' },
-    { value: 'B.E CSE (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)', label: 'B.E CSE (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)' },
+    { value: 'B.E CSE (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)', label: 'B.E CSE (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)' }
+  ],
+  'B.Tech': [
     { value: 'B.TECH (INFORMATION TECHNOLOGY)', label: 'B.TECH (INFORMATION TECHNOLOGY)' },
     { value: 'B.TECH ARTIFICIAL INTELLIGENCE AND DATA SCIENCE', label: 'B.TECH ARTIFICIAL INTELLIGENCE AND DATA SCIENCE' }
   ],
