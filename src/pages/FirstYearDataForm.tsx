@@ -207,19 +207,35 @@ export const FirstYearDataForm = () => {
       const isConfigured = !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY;
       if (!isConfigured) return;
 
-      const { data } = await supabase
+      const { data: draftData } = await supabase
         .from('first_year_data')
         .select('*')
         .eq('application_number', fn)
-        .single();
+        .maybeSingle();
         
-      if (data) {
-        Object.keys(data).forEach((key) => {
+      if (draftData) {
+        Object.keys(draftData).forEach((key) => {
           if (key !== 'id' && key !== 'application_number' && key !== 'created_at' && key !== 'updated_at' && key !== 'status') {
              // @ts-ignore
-             setValue(key, data[key] || '');
+             setValue(key, draftData[key] || '');
           }
         });
+      } else {
+        // No draft exists, fetch from student_profiles for pre-fill
+        const { data: profileData } = await supabase
+          .from('student_profiles')
+          .select('*')
+          .eq('application_number', fn)
+          .maybeSingle();
+
+        if (profileData) {
+          setValue('student_name', profileData.name || '');
+          setValue('email', profileData.email || '');
+          setValue('mobile_number', profileData.mobile_number || '');
+          // Map Course -> Programme/Degree and Department -> Course/Department if we stored it
+          if (profileData.course) setValue('programme', profileData.course);
+          if (profileData.department) setValue('course', profileData.department);
+        }
       }
     };
     loadDraft();
