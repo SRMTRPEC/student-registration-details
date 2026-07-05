@@ -237,6 +237,9 @@ export const FirstYearDataForm = () => {
           if (profileData.department) setValue('course', profileData.department);
         }
       }
+      
+      // Always set the application number field since we skipped it in the loop
+      setValue('application_number', fn);
     };
     loadDraft();
   }, [navigate, setValue, adminEditApp]);
