@@ -7,6 +7,7 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { supabase } from '../supabase/client';
 import { StudentProfileModal } from '../components/admin/StudentProfileModal';
+import { EditRegistrationModal } from '../components/admin/EditRegistrationModal';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState<'submissions' | 'registered'>('submissions');
   const [registeredStudents, setRegisteredStudents] = useState<any[]>([]);
   const [selectedFolderNumber, setSelectedFolderNumber] = useState<string | null>(null);
+  const [editRegistrationApp, setEditRegistrationApp] = useState<string | null>(null);
   const [printMode, setPrintMode] = useState(false);
   const [modalViewMode, setModalViewMode] = useState<'registered' | 'full'>('full');
 
@@ -432,8 +434,8 @@ export const AdminDashboard = () => {
                         <Button 
                           variant="ghost" 
                           className="text-yellow-500 hover:text-yellow-400 hover:bg-yellow-500/10 px-2 py-1 mr-2" 
-                          onClick={() => navigate(`/form/first-year-data?adminEditApp=${encodeURIComponent(student.application_number)}`)} 
-                          title="Edit Record"
+                          onClick={() => setEditRegistrationApp(student.application_number)} 
+                          title="Edit Registration Details"
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
@@ -456,6 +458,17 @@ export const AdminDashboard = () => {
           viewMode={modalViewMode}
           onClose={() => { setSelectedFolderNumber(null); setPrintMode(false); }} 
           startInPrintMode={printMode}
+        />
+      )}
+
+      {editRegistrationApp && (
+        <EditRegistrationModal
+          applicationNumber={editRegistrationApp}
+          onClose={() => setEditRegistrationApp(null)}
+          onSave={() => {
+            setEditRegistrationApp(null);
+            fetchData();
+          }}
         />
       )}
     </div>
