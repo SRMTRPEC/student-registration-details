@@ -5,9 +5,11 @@ import * as XLSX from 'xlsx';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { supabase } from '../supabase/client';
 import { StudentProfileModal } from '../components/admin/StudentProfileModal';
 import { EditRegistrationModal } from '../components/admin/EditRegistrationModal';
+import { CreateStudentModal } from '../components/admin/CreateStudentModal';
+import { CreateAdminModal } from '../components/admin/CreateAdminModal';
+import { supabase } from '../supabase/client';
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -15,10 +17,12 @@ export const AdminDashboard = () => {
   const [students, setStudents] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'submissions' | 'registered'>('submissions');
+  const [activeTab, setActiveTab] = useState<'submissions' | 'registered' | 'accounts'>('submissions');
   const [registeredStudents, setRegisteredStudents] = useState<any[]>([]);
   const [selectedFolderNumber, setSelectedFolderNumber] = useState<string | null>(null);
   const [editRegistrationApp, setEditRegistrationApp] = useState<string | null>(null);
+  const [showCreateStudent, setShowCreateStudent] = useState(false);
+  const [showCreateAdmin, setShowCreateAdmin] = useState(false);
   const [printMode, setPrintMode] = useState(false);
   const [modalViewMode, setModalViewMode] = useState<'registered' | 'full'>('full');
 
@@ -326,11 +330,51 @@ export const AdminDashboard = () => {
         >
           Registered Profiles
         </Button>
+        <Button 
+          variant={activeTab === 'accounts' ? 'primary' : 'ghost'} 
+          onClick={() => setActiveTab('accounts')}
+          className={activeTab === 'accounts' ? '' : 'text-text-secondary hover:text-white'}
+        >
+          Account Management
+        </Button>
       </div>
 
       <Card className="flex-1 min-h-[500px]">
-        <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
-          <h2 className="text-xl font-bold">{activeTab === 'submissions' ? 'Student Records' : 'Registered Students'}</h2>
+        {activeTab === 'accounts' ? (
+          <div className="p-6">
+            <h2 className="text-xl font-bold mb-6">Account Management</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card className="p-6 bg-white/5 border-white/10 hover:bg-white/10 transition-colors">
+                <h3 className="text-lg font-bold text-primary mb-2">Student Logins</h3>
+                <p className="text-text-secondary text-sm mb-6">
+                  Manually register a new student and generate their login credentials. They can then log in and complete the full admission form.
+                </p>
+                <Button 
+                  onClick={() => setShowCreateStudent(true)}
+                  className="w-full bg-primary hover:bg-primary-hover text-white"
+                >
+                  Create Student Login
+                </Button>
+              </Card>
+
+              <Card className="p-6 bg-white/5 border-white/10 hover:bg-white/10 transition-colors">
+                <h3 className="text-lg font-bold text-blue-400 mb-2">Administrator Profiles</h3>
+                <p className="text-text-secondary text-sm mb-6">
+                  Invite a new administrator to the dashboard. They will have full access to view, edit, and print student records.
+                </p>
+                <Button 
+                  onClick={() => setShowCreateAdmin(true)}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  Create Admin Profile
+                </Button>
+              </Card>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
+              <h2 className="text-xl font-bold">{activeTab === 'submissions' ? 'Student Records' : 'Registered Students'}</h2>
           <div className="relative w-full sm:w-72">
             <Search className="absolute left-3 top-3.5 w-4 h-4 text-text-secondary pointer-events-none" />
             <Input 
@@ -450,6 +494,8 @@ export const AdminDashboard = () => {
             </tbody>
           </table>
         </div>
+        </>
+        )}
       </Card>
 
       {selectedFolderNumber && (
@@ -468,6 +514,27 @@ export const AdminDashboard = () => {
           onSave={() => {
             setEditRegistrationApp(null);
             fetchData();
+          }}
+        />
+      )}
+
+      {showCreateStudent && (
+        <CreateStudentModal
+          onClose={() => setShowCreateStudent(false)}
+          onSuccess={() => {
+            setShowCreateStudent(false);
+            fetchData();
+            alert("Student login created successfully!");
+          }}
+        />
+      )}
+
+      {showCreateAdmin && (
+        <CreateAdminModal
+          onClose={() => setShowCreateAdmin(false)}
+          onSuccess={() => {
+            setShowCreateAdmin(false);
+            alert("Admin profile created successfully!");
           }}
         />
       )}
