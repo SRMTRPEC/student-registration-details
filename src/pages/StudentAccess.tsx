@@ -66,6 +66,13 @@ export const StudentAccess = () => {
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
+    
+    const appNumberRegex = /^[a-zA-Z0-9]{6}$/;
+    if (!appNumberRegex.test(appNumber.trim())) {
+      setErrorMsg('Application Number must be strictly 6 alphanumeric characters');
+      return;
+    }
+
     if (!appNumber.trim() || !password) return;
     
     if (!isLogin && password !== confirmPassword) {

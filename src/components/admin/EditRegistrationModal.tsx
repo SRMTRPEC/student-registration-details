@@ -99,6 +99,11 @@ export const EditRegistrationModal = ({ applicationNumber, onClose, onSave }: Ed
     try {
       const newAppNumber = formData.application_number.trim();
       
+      const appNumberRegex = /^[a-zA-Z0-9]{6}$/;
+      if (!appNumberRegex.test(newAppNumber)) {
+        throw new Error("Application Number must be strictly 6 alphanumeric characters");
+      }
+      
       if (newAppNumber !== applicationNumber) {
         // First check if the new application number already exists
         const { data: existing } = await supabase
