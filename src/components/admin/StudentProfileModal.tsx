@@ -9,9 +9,10 @@ interface StudentProfileModalProps {
   applicationNumber: string;
   onClose: () => void;
   startInPrintMode?: boolean;
+  viewMode?: 'registered' | 'full';
 }
 
-export const StudentProfileModal = ({ applicationNumber, onClose, startInPrintMode }: StudentProfileModalProps) => {
+export const StudentProfileModal = ({ applicationNumber, onClose, startInPrintMode = false, viewMode = 'full' }: StudentProfileModalProps) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [firstYearData, setFirstYearData] = useState<any>(null);
@@ -154,7 +155,7 @@ export const StudentProfileModal = ({ applicationNumber, onClose, startInPrintMo
               <p className="text-text-secondary">Application Number: <span className="font-mono text-white">{applicationNumber}</span></p>
             </div>
             <div className="flex items-center gap-3">
-              {!isLoading && firstYearData && (
+              {!isLoading && firstYearData && viewMode === 'full' && (
                 <>
                   <button
                     onClick={() => navigate(`/form/first-year-data?adminEditApp=${encodeURIComponent(applicationNumber)}`)}
@@ -206,191 +207,203 @@ export const StudentProfileModal = ({ applicationNumber, onClose, startInPrintMo
                     <Field label="Application Number" value={firstYearData.application_number} />
                     <Field label="Student Name" value={firstYearData.student_name} />
                     <Field label="Primary Email" value={firstYearData.email} />
-                    <Field label="Alternate Email" value={firstYearData.email_id} />
                     <Field label="Mobile Number" value={firstYearData.mobile_number} />
+                    <Field label="Degree" value={firstYearData.programme} />
+                    <Field label="Course/Department" value={firstYearData.course} />
                     
-                    <h3 className="col-span-2 text-lg font-medium text-white border-b border-white/10 pb-2 mt-4">Address Details</h3>
-                    <div className="col-span-2 md:col-span-1">
-                      <p className="text-xs text-text-secondary uppercase tracking-wider mb-1">Permanent Address</p>
-                      <p className="font-medium text-white bg-white/5 p-3 rounded-lg border border-white/5 whitespace-pre-wrap">
-                        {firstYearData.perm_address_line_1}
-                        {firstYearData.perm_address_line_2 && `\n${firstYearData.perm_address_line_2}`}
-                        {`\n${firstYearData.perm_village_city}`}
-                        {`\n${firstYearData.perm_district}`}
-                        {`\n${firstYearData.perm_state} - ${firstYearData.perm_pincode}`}
-                      </p>
-                    </div>
-                    <div className="col-span-2 md:col-span-1">
-                      <p className="text-xs text-text-secondary uppercase tracking-wider mb-1">Communication Address</p>
-                      <p className="font-medium text-white bg-white/5 p-3 rounded-lg border border-white/5 whitespace-pre-wrap">
-                        {firstYearData.is_same_address === 'Yes' ? 'Same as Permanent Address' : (
+                    {viewMode === 'full' && (
+                      <>
+                        <Field label="Alternate Email" value={firstYearData.email_id} />
+                        <Field label="Alternative Number" value={firstYearData.alternative_number} />
+                    
+                        <h3 className="col-span-2 text-lg font-medium text-white border-b border-white/10 pb-2 mt-4">Address Details</h3>
+                        <div className="col-span-2 md:col-span-1">
+                          <p className="text-xs text-text-secondary uppercase tracking-wider mb-1">Permanent Address</p>
+                          <p className="font-medium text-white bg-white/5 p-3 rounded-lg border border-white/5 whitespace-pre-wrap">
+                            {firstYearData.perm_address_line_1}
+                            {firstYearData.perm_address_line_2 && `\n${firstYearData.perm_address_line_2}`}
+                            {`\n${firstYearData.perm_village_city}`}
+                            {`\n${firstYearData.perm_district}`}
+                            {`\n${firstYearData.perm_state} - ${firstYearData.perm_pincode}`}
+                          </p>
+                        </div>
+                        <div className="col-span-2 md:col-span-1">
+                          <p className="text-xs text-text-secondary uppercase tracking-wider mb-1">Communication Address</p>
+                          <p className="font-medium text-white bg-white/5 p-3 rounded-lg border border-white/5 whitespace-pre-wrap">
+                            {firstYearData.is_same_address === 'Yes' ? 'Same as Permanent Address' : (
+                              <>
+                                {firstYearData.comm_address_line_1}
+                                {firstYearData.comm_address_line_2 && `\n${firstYearData.comm_address_line_2}`}
+                                {`\n${firstYearData.comm_village_city}`}
+                                {`\n${firstYearData.comm_district}`}
+                                {`\n${firstYearData.comm_state} - ${firstYearData.comm_pincode}`}
+                              </>
+                            )}
+                          </p>
+                        </div>
+
+                        <h3 className="col-span-2 text-lg font-medium text-white border-b border-white/10 pb-2 mt-4">Residence Type</h3>
+                        <Field label="Residence Type" value={firstYearData.residence_type} />
+                        {firstYearData.residence_type === 'Dayscholar' && (
                           <>
-                            {firstYearData.comm_address_line_1}
-                            {firstYearData.comm_address_line_2 && `\n${firstYearData.comm_address_line_2}`}
-                            {`\n${firstYearData.comm_village_city}`}
-                            {`\n${firstYearData.comm_district}`}
-                            {`\n${firstYearData.comm_state} - ${firstYearData.comm_pincode}`}
+                            <Field label="Transport Mode" value={firstYearData.transport_mode} />
+                            {firstYearData.transport_mode === 'College Bus' && (
+                              <Field label="Boarding Point" value={firstYearData.boarding_point} />
+                            )}
                           </>
                         )}
-                      </p>
-                    </div>
-
-                    <h3 className="col-span-2 text-lg font-medium text-white border-b border-white/10 pb-2 mt-4">Residence Type</h3>
-                    <Field label="Residence Type" value={firstYearData.residence_type} />
-                    {firstYearData.residence_type === 'Dayscholar' && (
-                      <>
-                        <Field label="Transport Mode" value={firstYearData.transport_mode} />
-                        {firstYearData.transport_mode === 'College Bus' && (
-                          <Field label="Boarding Point" value={firstYearData.boarding_point} />
+                        {firstYearData.residence_type === 'Outside Stay' && (
+                          <Field label="Outside Stay Details" value={firstYearData.outside_stay_details} />
                         )}
+                        <Field label="Date of Birth" value={firstYearData.dob} />
+                        <Field label="Community" value={firstYearData.community === 'Other' ? firstYearData.community_other : firstYearData.community} />
+                        <Field label="Admission Category" value={firstYearData.admission_category} />
+                        <Field label="Degree" value={firstYearData.programme} />
+                        <Field label="Course" value={firstYearData.course} />
+                        <Field label="Application/Allotment No." value={firstYearData.application_number} />
+                        
+                        <h3 className="col-span-2 text-lg font-medium text-white border-b border-white/10 pb-2 mt-4">Family & Income Details</h3>
+                        <Field label="Religion" value={firstYearData.religion} />
+                        <Field label="Caste Name" value={firstYearData.caste_name} />
+                        {firstYearData.community !== 'OC' && (
+                          <Field label="Community Certificate No." value={firstYearData.community_certificate_number} />
+                        )}
+                        <Field label="Father's Income" value={firstYearData.father_income} />
+                        <Field label="Date of Document Submission" value={firstYearData.date_of_document_submission} />
                       </>
                     )}
-                    {firstYearData.residence_type === 'Outside Stay' && (
-                      <Field label="Outside Stay Details" value={firstYearData.outside_stay_details} />
-                    )}
-                    <Field label="Date of Birth" value={firstYearData.dob} />
-                    <Field label="Community" value={firstYearData.community === 'Other' ? firstYearData.community_other : firstYearData.community} />
-                    <Field label="Admission Category" value={firstYearData.admission_category} />
-                    <Field label="Degree" value={firstYearData.programme} />
-                    <Field label="Course" value={firstYearData.course} />
-                    <Field label="Application/Allotment No." value={firstYearData.application_number} />
-                    
-                    <h3 className="col-span-2 text-lg font-medium text-white border-b border-white/10 pb-2 mt-4">Family & Income Details</h3>
-                    <Field label="Religion" value={firstYearData.religion} />
-                    <Field label="Caste Name" value={firstYearData.caste_name} />
-                    {firstYearData.community !== 'OC' && (
-                      <Field label="Community Certificate No." value={firstYearData.community_certificate_number} />
-                    )}
-                    <Field label="Father's Income" value={firstYearData.father_income} />
-                    <Field label="Date of Document Submission" value={firstYearData.date_of_document_submission} />
                   </div>
                 </div>
 
-                {/* Form 2: Additional Details */}
-                <div className="pt-6 border-t border-white/10">
-                  <div className="bg-accent/10 border border-accent/20 p-4 rounded-lg mb-4">
-                    <h3 className="text-xl font-bold text-accent">Additional Details</h3>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ml-2">
-                    <Field label="Alternative Mobile" value={firstYearData.alternative_number} />
-                    <Field label="Blood Group" value={firstYearData.blood_group} />
-                    <Field label="Mother Tongue" value={firstYearData.mother_tongue} />
-                    <Field label="Mother Name" value={firstYearData.mother_name} />
-                    <Field label="Mother Mobile" value={firstYearData.mother_mobile} />
-                    <Field label="Father's Occupation" value={firstYearData.father_occupation} />
-                    <Field label="Mother's Occupation" value={firstYearData.mother_occupation} />
-                    <Field label="Single Parent" value={firstYearData.single_parent} />
-                    <Field label="Number of Siblings" value={firstYearData.siblings_count || '0'} />
-                    {firstYearData.siblings && firstYearData.siblings.length > 0 && (
-                      <div className="md:col-span-2 space-y-3 my-2">
-                        {firstYearData.siblings.map((sibling: any, idx: number) => (
-                          <div key={idx} className="bg-white/5 p-4 rounded-lg border border-white/5">
-                            <h4 className="text-primary font-medium text-sm mb-3">Sibling {idx + 1}</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                              <Field label="Name" value={sibling.name} />
-                              <Field label="Education" value={sibling.education} />
-                              <Field label="Occupation" value={sibling.occupation} />
+                {viewMode === 'full' && (
+                  <>
+                    {/* Form 2: Additional Details */}
+                    <div className="pt-6 border-t border-white/10">
+                      <div className="bg-accent/10 border border-accent/20 p-4 rounded-lg mb-4">
+                        <h3 className="text-xl font-bold text-accent">Additional Details</h3>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ml-2">
+                        <Field label="Alternative Mobile" value={firstYearData.alternative_number} />
+                        <Field label="Blood Group" value={firstYearData.blood_group} />
+                        <Field label="Mother Tongue" value={firstYearData.mother_tongue} />
+                        <Field label="Mother Name" value={firstYearData.mother_name} />
+                        <Field label="Mother Mobile" value={firstYearData.mother_mobile} />
+                        <Field label="Father's Occupation" value={firstYearData.father_occupation} />
+                        <Field label="Mother's Occupation" value={firstYearData.mother_occupation} />
+                        <Field label="Single Parent" value={firstYearData.single_parent} />
+                        <Field label="Number of Siblings" value={firstYearData.siblings_count || '0'} />
+                        {firstYearData.siblings && firstYearData.siblings.length > 0 && (
+                          <div className="md:col-span-2 space-y-3 my-2">
+                            {firstYearData.siblings.map((sibling: any, idx: number) => (
+                              <div key={idx} className="bg-white/5 p-4 rounded-lg border border-white/5">
+                                <h4 className="text-primary font-medium text-sm mb-3">Sibling {idx + 1}</h4>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                  <Field label="Name" value={sibling.name} />
+                                  <Field label="Education" value={sibling.education} />
+                                  <Field label="Occupation" value={sibling.occupation} />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        <Field label="Religion" value={firstYearData.religion} />
+                        <Field label="Caste Name" value={firstYearData.caste_name} />
+                        {firstYearData.community !== 'OC' && (
+                          <Field label="Community Certificate No." value={firstYearData.community_certificate_number} />
+                        )}
+                        <Field label="Father's Income" value={firstYearData.father_income} />
+                        <Field label="Mother's Income" value={firstYearData.mother_income} />
+                        <Field label="Guardian's Income" value={firstYearData.guardian_income} />
+                        <Field label="Income Certificate No." value={firstYearData.income_certificate_number} />
+                        <Field label="First Graduate" value={firstYearData.first_graduate} />
+                        <Field label="First Graduate Cert. No." value={firstYearData.first_graduate_certificate_number} />
+                        <Field label="PMSS Scholarship" value={firstYearData.apply_pmss_scholarship} />
+                        <Field label="BC/MBC Scholarship" value={firstYearData.apply_bc_mbc_scholarship} />
+                        <Field label="EMIS Number" value={firstYearData.emis_number} />
+                        <Field label="Document Submission Date" value={firstYearData.date_of_document_submission} />
+                      </div>
+                      
+                      <div className="mt-8">
+                        <h3 className="text-lg font-medium text-white border-b border-white/10 pb-2 mb-4">10th Standard Details</h3>
+                        <div className="grid md:grid-cols-2 gap-4 gap-y-6">
+                          <Field label="Board of Education" value={firstYearData.tenth_board} />
+                          <Field label="Medium of Instruction" value={firstYearData.tenth_medium} />
+                          <Field label="District" value={firstYearData.tenth_district} />
+                          <Field label="Block" value={firstYearData.tenth_block} />
+                          <div className="col-span-2">
+                            <Field label="School" value={firstYearData.tenth_school} />
+                          </div>
+                          <div className="col-span-2 bg-white/5 p-4 rounded-lg">
+                            <h4 className="text-sm font-medium text-text-secondary mb-3">10th Marks (Out of 100 per subject)</h4>
+                            <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+                              <Field label="Language" value={firstYearData.tenth_lang_mark} />
+                              <Field label="English" value={firstYearData.tenth_eng_mark} />
+                              <Field label="Maths" value={firstYearData.tenth_math_mark} />
+                              <Field label="Science" value={firstYearData.tenth_sci_mark} />
+                              <Field label="Social" value={firstYearData.tenth_soc_mark} />
+                              <Field label="Total Mark" value={firstYearData.tenth_total_marks} />
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    )}
-                    <Field label="Religion" value={firstYearData.religion} />
-                    <Field label="Caste Name" value={firstYearData.caste_name} />
-                    {firstYearData.community !== 'OC' && (
-                      <Field label="Community Certificate No." value={firstYearData.community_certificate_number} />
-                    )}
-                    <Field label="Father's Income" value={firstYearData.father_income} />
-                    <Field label="Mother's Income" value={firstYearData.mother_income} />
-                    <Field label="Guardian's Income" value={firstYearData.guardian_income} />
-                    <Field label="Income Certificate No." value={firstYearData.income_certificate_number} />
-                    <Field label="First Graduate" value={firstYearData.first_graduate} />
-                    <Field label="First Graduate Cert. No." value={firstYearData.first_graduate_certificate_number} />
-                    <Field label="PMSS Scholarship" value={firstYearData.apply_pmss_scholarship} />
-                    <Field label="BC/MBC Scholarship" value={firstYearData.apply_bc_mbc_scholarship} />
-                    <Field label="EMIS Number" value={firstYearData.emis_number} />
-                    <Field label="Document Submission Date" value={firstYearData.date_of_document_submission} />
-                  </div>
-                  
-                  <div className="mt-8">
-                    <h3 className="text-lg font-medium text-white border-b border-white/10 pb-2 mb-4">10th Standard Details</h3>
-                    <div className="grid md:grid-cols-2 gap-4 gap-y-6">
-                      <Field label="Board of Education" value={firstYearData.tenth_board} />
-                      <Field label="Medium of Instruction" value={firstYearData.tenth_medium} />
-                      <Field label="District" value={firstYearData.tenth_district} />
-                      <Field label="Block" value={firstYearData.tenth_block} />
-                      <div className="col-span-2">
-                        <Field label="School" value={firstYearData.tenth_school} />
-                      </div>
-                      <div className="col-span-2 bg-white/5 p-4 rounded-lg">
-                        <h4 className="text-sm font-medium text-text-secondary mb-3">10th Marks (Out of 100 per subject)</h4>
-                        <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
-                          <Field label="Language" value={firstYearData.tenth_lang_mark} />
-                          <Field label="English" value={firstYearData.tenth_eng_mark} />
-                          <Field label="Maths" value={firstYearData.tenth_math_mark} />
-                          <Field label="Science" value={firstYearData.tenth_sci_mark} />
-                          <Field label="Social" value={firstYearData.tenth_soc_mark} />
-                          <Field label="Total Mark" value={firstYearData.tenth_total_marks} />
                         </div>
                       </div>
-                    </div>
-                  </div>
 
-                  <div className="mt-8">
-                    <h3 className="text-lg font-medium text-white border-b border-white/10 pb-2 mb-4">12th Standard Details</h3>
-                    <div className="grid md:grid-cols-2 gap-4 gap-y-6">
-                      <Field label="Board of Education" value={firstYearData.twelfth_board} />
-                      <Field label="Medium of Instruction" value={firstYearData.twelfth_medium} />
-                      <Field label="District" value={firstYearData.twelfth_district} />
-                      <Field label="Block" value={firstYearData.twelfth_block} />
-                      <div className="col-span-2">
-                        <Field label="School" value={firstYearData.twelfth_school} />
-                      </div>
-                      <div className="col-span-2 bg-white/5 p-4 rounded-lg">
-                        <h4 className="text-sm font-medium text-text-secondary mb-3">12th Marks (Out of 100 per subject)</h4>
-                        <div className="grid grid-cols-3 gap-4 mb-4">
-                          <Field label="Language" value={firstYearData.twelfth_lang_mark} />
-                          <Field label="English" value={firstYearData.twelfth_eng_mark} />
-                          <Field label="Total (Out of 600)" value={firstYearData.twelfth_total_marks} />
-                        </div>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          <Field label={firstYearData.twelfth_sub1_name || "Subject 1"} value={firstYearData.twelfth_sub1_mark} />
-                          <Field label={firstYearData.twelfth_sub2_name || "Subject 2"} value={firstYearData.twelfth_sub2_mark} />
-                          <Field label={firstYearData.twelfth_sub3_name || "Subject 3"} value={firstYearData.twelfth_sub3_mark} />
-                          <Field label={firstYearData.twelfth_sub4_name || "Subject 4"} value={firstYearData.twelfth_sub4_mark} />
+                      <div className="mt-8">
+                        <h3 className="text-lg font-medium text-white border-b border-white/10 pb-2 mb-4">12th Standard Details</h3>
+                        <div className="grid md:grid-cols-2 gap-4 gap-y-6">
+                          <Field label="Board of Education" value={firstYearData.twelfth_board} />
+                          <Field label="Medium of Instruction" value={firstYearData.twelfth_medium} />
+                          <Field label="District" value={firstYearData.twelfth_district} />
+                          <Field label="Block" value={firstYearData.twelfth_block} />
+                          <div className="col-span-2">
+                            <Field label="School" value={firstYearData.twelfth_school} />
+                          </div>
+                          <div className="col-span-2 bg-white/5 p-4 rounded-lg">
+                            <h4 className="text-sm font-medium text-text-secondary mb-3">12th Marks (Out of 100 per subject)</h4>
+                            <div className="grid grid-cols-3 gap-4 mb-4">
+                              <Field label="Language" value={firstYearData.twelfth_lang_mark} />
+                              <Field label="English" value={firstYearData.twelfth_eng_mark} />
+                              <Field label="Total (Out of 600)" value={firstYearData.twelfth_total_marks} />
+                            </div>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                              <Field label={firstYearData.twelfth_sub1_name || "Subject 1"} value={firstYearData.twelfth_sub1_mark} />
+                              <Field label={firstYearData.twelfth_sub2_name || "Subject 2"} value={firstYearData.twelfth_sub2_mark} />
+                              <Field label={firstYearData.twelfth_sub3_name || "Subject 3"} value={firstYearData.twelfth_sub3_mark} />
+                              <Field label={firstYearData.twelfth_sub4_name || "Subject 4"} value={firstYearData.twelfth_sub4_mark} />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
 
-                {/* Form 3: Documents */}
-                <div className="pt-6 border-t border-white/10">
-                  <div className="bg-purple-500/10 border border-purple-500/20 p-4 rounded-lg mb-4">
-                    <h3 className="text-xl font-bold text-purple-400">Form 3: Document Uploads</h3>
-                    <p className="text-sm text-text-secondary">
-                      {documentsData.length > 0 
-                        ? `${documentsData.length} documents uploaded` 
-                        : 'No documents uploaded yet'}
-                    </p>
-                  </div>
-                  
-                  {documentsData.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ml-2">
-                      {documentsData.map(doc => (
-                        <div key={doc.id} className="bg-white/5 p-3 rounded-lg border border-white/5 flex flex-col justify-center">
-                          <p className="text-xs text-text-secondary uppercase tracking-wider mb-1 truncate">{doc.document_name}</p>
-                          <a href={doc.file_url} target="_blank" rel="noreferrer" className="font-medium text-primary hover:underline truncate">View Document</a>
+                    {/* Form 3: Documents */}
+                    <div className="pt-6 border-t border-white/10">
+                      <div className="bg-purple-500/10 border border-purple-500/20 p-4 rounded-lg mb-4">
+                        <h3 className="text-xl font-bold text-purple-400">Form 3: Document Uploads</h3>
+                        <p className="text-sm text-text-secondary">
+                          {documentsData.length > 0 
+                            ? `${documentsData.length} documents uploaded` 
+                            : 'No documents uploaded yet'}
+                        </p>
+                      </div>
+                      
+                      {documentsData.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ml-2">
+                          {documentsData.map(doc => (
+                            <div key={doc.id} className="bg-white/5 p-3 rounded-lg border border-white/5 flex flex-col justify-center">
+                              <p className="text-xs text-text-secondary uppercase tracking-wider mb-1 truncate">{doc.document_name}</p>
+                              <a href={doc.file_url} target="_blank" rel="noreferrer" className="font-medium text-primary hover:underline truncate">View Document</a>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      ) : (
+                        <div className="text-center p-6 text-text-secondary bg-white/5 rounded-lg border border-white/5">
+                          Student has not uploaded any documents.
+                        </div>
+                      )}
                     </div>
-                  ) : (
-                    <div className="text-center p-6 text-text-secondary bg-white/5 rounded-lg border border-white/5">
-                      Student has not uploaded any documents.
-                    </div>
-                  )}
-                </div>
+                  </>
+                )}
               </div>
             )}
           </div>

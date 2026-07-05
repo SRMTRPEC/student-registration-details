@@ -18,6 +18,7 @@ export const AdminDashboard = () => {
   const [registeredStudents, setRegisteredStudents] = useState<any[]>([]);
   const [selectedFolderNumber, setSelectedFolderNumber] = useState<string | null>(null);
   const [printMode, setPrintMode] = useState(false);
+  const [modalViewMode, setModalViewMode] = useState<'registered' | 'full'>('full');
 
   useEffect(() => {
     fetchData();
@@ -383,9 +384,9 @@ export const AdminDashboard = () => {
                       <Button 
                         variant="ghost" 
                         className="text-primary hover:text-white px-3 py-1 mr-2" 
-                        onClick={() => { setSelectedFolderNumber(student.application_number); setPrintMode(false); }}
+                        onClick={() => { setSelectedFolderNumber(student.application_number); setModalViewMode('full'); setPrintMode(false); }}
                       >
-                        View Profile
+                        View Form
                       </Button>
                       <Button 
                         className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 mr-2 h-8 text-sm" 
@@ -425,7 +426,7 @@ export const AdminDashboard = () => {
                         <Button 
                           variant="ghost" 
                           className="text-primary hover:text-white px-3 py-1 mr-2" 
-                          onClick={() => { setSelectedFolderNumber(student.application_number); setPrintMode(false); }}
+                          onClick={() => { setSelectedFolderNumber(student.application_number); setModalViewMode('registered'); setPrintMode(false); }}
                         >
                           View Profile
                         </Button>
@@ -442,6 +443,7 @@ export const AdminDashboard = () => {
       {selectedFolderNumber && (
         <StudentProfileModal 
           applicationNumber={selectedFolderNumber} 
+          viewMode={modalViewMode}
           onClose={() => { setSelectedFolderNumber(null); setPrintMode(false); }} 
           startInPrintMode={printMode}
         />
