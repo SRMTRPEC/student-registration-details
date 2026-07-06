@@ -83,8 +83,7 @@ export const ChangeStudentPasswordModal = ({ onClose, onSuccess }: ChangeStudent
       const { error } = await supabase
         .from('student_profiles')
         .update({
-          password: formData.new_password,
-          updated_at: new Date().toISOString()
+          password: formData.new_password
         })
         .eq('application_number', appNumber);
 

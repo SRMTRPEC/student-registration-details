@@ -126,8 +126,7 @@ export const EditRegistrationModal = ({ applicationNumber, onClose, onSave }: Ed
           email: formData.email,
           mobile_number: formData.mobile_number,
           course: formData.course,
-          department: formData.department,
-          updated_at: new Date().toISOString()
+          department: formData.department
         })
         .eq('application_number', applicationNumber);
 
