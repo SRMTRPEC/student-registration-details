@@ -385,32 +385,7 @@ export const StudentProfileModal = ({ applicationNumber, onClose, startInPrintMo
                       </div>
                     </div>
 
-                    {/* Form 3: Documents */}
-                    <div className="pt-6 border-t border-white/10">
-                      <div className="bg-purple-500/10 border border-purple-500/20 p-4 rounded-lg mb-4">
-                        <h3 className="text-xl font-bold text-purple-400">Form 3: Document Uploads</h3>
-                        <p className="text-sm text-text-secondary">
-                          {documentsData.length > 0 
-                            ? `${documentsData.length} documents uploaded` 
-                            : 'No documents uploaded yet'}
-                        </p>
-                      </div>
-                      
-                      {documentsData.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ml-2">
-                          {documentsData.map(doc => (
-                            <div key={doc.id} className="bg-white/5 p-3 rounded-lg border border-white/5 flex flex-col justify-center">
-                              <p className="text-xs text-text-secondary uppercase tracking-wider mb-1 truncate">{doc.document_name}</p>
-                              <a href={doc.file_url} target="_blank" rel="noreferrer" className="font-medium text-primary hover:underline truncate">View Document</a>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="text-center p-6 text-text-secondary bg-white/5 rounded-lg border border-white/5">
-                          Student has not uploaded any documents.
-                        </div>
-                      )}
-                    </div>
+
                   </>
                 )}
               </div>

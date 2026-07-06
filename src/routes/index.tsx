@@ -8,7 +8,7 @@ import { StudentDashboard } from '../pages/StudentDashboard';
 import { FirstYearDataForm } from '../pages/FirstYearDataForm';
 import { SuccessPage } from '../pages/SuccessPage';
 import { AdminDashboard } from '../pages/AdminDashboard';
-import { DocumentUploadForm } from '../pages/DocumentUploadForm';
+
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
       { path: 'admin/login', element: <AdminLogin /> },
       { path: 'dashboard', element: <StudentDashboard /> },
       { path: 'form/first-year-data', element: <FirstYearDataForm /> },
-      { path: 'form/documents', element: <DocumentUploadForm /> },
+
       { path: 'form/success', element: <SuccessPage /> },
       { path: 'admin/dashboard', element: <AdminDashboard /> },
     ]
