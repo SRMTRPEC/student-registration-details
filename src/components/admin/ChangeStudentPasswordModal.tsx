@@ -68,15 +68,19 @@ export const ChangeStudentPasswordModal = ({ onClose, onSuccess }: ChangeStudent
         throw new Error("Password must be at least 6 characters");
       }
 
-      // Check if application number exists
+      // Check if application number exists and compare password
       const { data: existing } = await supabase
         .from('student_profiles')
-        .select('application_number')
+        .select('application_number, password')
         .eq('application_number', appNumber)
         .maybeSingle();
         
       if (!existing) {
         throw new Error(`Application Number ${appNumber} not found!`);
+      }
+      
+      if (existing.password === formData.new_password) {
+        throw new Error("The new password is the same as the current password.");
       }
 
       // Update password
