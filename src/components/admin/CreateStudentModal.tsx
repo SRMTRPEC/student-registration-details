@@ -45,6 +45,7 @@ export const CreateStudentModal = ({ onClose, onSuccess }: CreateStudentModalPro
   const [isSaving, setIsSaving] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
+    quota: 'Government',
     application_number: '',
     password: '',
     name: '',
@@ -66,14 +67,29 @@ export const CreateStudentModal = ({ onClose, onSuccess }: CreateStudentModalPro
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    let actualAppNumber = formData.application_number.trim();
+    if (formData.quota === 'Management') {
+      if (!/^\d{5}$/.test(actualAppNumber)) {
+        alert('Management Quota application number must be exactly 5 digits');
+        return;
+      }
+      actualAppNumber = `TRP2026/${actualAppNumber}`;
+    } else {
+      if (!/^\d{6}$/.test(actualAppNumber)) {
+        alert('Government Quota application number must be exactly 6 digits');
+        return;
+      }
+    }
+    
     setIsSaving(true);
     
     try {
-      const appNumber = formData.application_number.trim();
+      const appNumber = actualAppNumber;
       
-      const appNumberRegex = /^[a-zA-Z0-9]{1,15}$/;
+      const appNumberRegex = /^[a-zA-Z0-9/]{1,20}$/;
       if (!appNumberRegex.test(appNumber)) {
-        throw new Error("Application Number must be between 1 and 15 alphanumeric characters");
+        throw new Error("Application Number format is invalid");
       }
       
       if (formData.password.length < 6) {
@@ -139,14 +155,40 @@ export const CreateStudentModal = ({ onClose, onSuccess }: CreateStudentModalPro
 
           <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
             <form onSubmit={handleSubmit} className="space-y-4">
-              <Input 
-                label="Application Number" 
-                name="application_number"
-                value={formData.application_number} 
-                onChange={handleChange} 
-                required 
-                placeholder="6-character alphanumeric"
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Select 
+                  label="Admission Quota" 
+                  name="quota"
+                  value={formData.quota} 
+                  onChange={(e) => setFormData(prev => ({ ...prev, quota: e.target.value, application_number: '' }))} 
+                  required 
+                  options={[{ value: 'Government', label: 'Government Quota' }, { value: 'Management', label: 'Management Quota' }]} 
+                />
+                
+                <div className="relative">
+                  <Input 
+                    label="Application Number" 
+                    name="application_number"
+                    value={formData.application_number} 
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, ''); // only allow digits
+                      if (formData.quota === 'Management') {
+                        if (val.length <= 5) setFormData(prev => ({ ...prev, application_number: val }));
+                      } else {
+                        if (val.length <= 6) setFormData(prev => ({ ...prev, application_number: val }));
+                      }
+                    }} 
+                    required 
+                    placeholder={formData.quota === 'Management' ? "5-digit number" : "6-digit number"}
+                    className={formData.quota === 'Management' ? "pl-[90px]" : ""}
+                  />
+                  {formData.quota === 'Management' && (
+                    <div className="absolute left-3 top-[34px] text-text-secondary pointer-events-none select-none font-mono">
+                      TRP2026/
+                    </div>
+                  )}
+                </div>
+              </div>
               
               <div className="relative">
                 <Input 

@@ -261,6 +261,13 @@ export const FirstYearDataForm = () => {
       
       // Always set the application number field since we skipped it in the loop
       setValue('application_number', fn);
+      
+      // Enforce admission category based on application number prefix
+      if (fn.startsWith('TRP2026/')) {
+        setValue('admission_category', 'Management Quota');
+      } else {
+        setValue('admission_category', 'Government Quota (Counseling)');
+      }
     };
     loadDraft();
   }, [navigate, setValue, adminEditApp]);

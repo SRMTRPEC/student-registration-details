@@ -58,23 +58,38 @@ export const StudentAccess = () => {
 
 
 
+  const [quota, setQuota] = useState('Government');
+
+
   const handleAuth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMsg('');
     
     // Read directly from FormData to avoid React state autofill bugs
     const formData = new FormData(e.currentTarget);
-    const actualAppNumber = (formData.get('appNumber') as string) || appNumber;
+    const actualQuota = (formData.get('quota') as string) || quota;
+    let actualAppNumber = (formData.get('appNumber') as string) || appNumber;
     const actualPassword = (formData.get('password') as string) || password;
     const actualConfirm = (formData.get('confirmPassword') as string) || confirmPassword;
     
-    const appNumberRegex = /^[a-zA-Z0-9]{1,15}$/;
-    if (!appNumberRegex.test(actualAppNumber.trim())) {
-      setErrorMsg('Application Number must be between 1 and 15 alphanumeric characters');
-      return;
-    }
-
     if (!actualAppNumber.trim() || !actualPassword) return;
+
+    if (actualQuota === 'Management') {
+      if (!/^\d{5}$/.test(actualAppNumber.trim())) {
+        setErrorMsg('Management Quota application number must be exactly 5 digits');
+        return;
+      }
+      actualAppNumber = `TRP2026/${actualAppNumber.trim()}`;
+    } else {
+      if (!/^\d{6}$/.test(actualAppNumber.trim())) {
+        // Also check if it's the legacy test user to avoid locking admin out of testing
+        if (actualAppNumber.trim() !== 'TESTING' && actualAppNumber.trim() !== '987654' && actualAppNumber.trim() !== '123456') {
+          setErrorMsg('Government Quota application number must be exactly 6 digits');
+          return;
+        }
+      }
+      actualAppNumber = actualAppNumber.trim();
+    }
     
     if (!isLogin && actualPassword !== actualConfirm) {
       setErrorMsg("Passwords do not match");
@@ -187,16 +202,43 @@ export const StudentAccess = () => {
             )}
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className={isLogin ? "md:col-span-2" : ""}>
-                <Input
-                  label="Application Number"
-                  name="appNumber"
-                  type="text"
-                  placeholder="e.g. 123456"
-                  value={appNumber}
-                  onChange={(e) => setAppNumber(e.target.value)}
-                  required
+              <div className={isLogin ? "md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4" : "grid grid-cols-1 md:grid-cols-2 gap-4 col-span-1 md:col-span-2"}>
+                <Select 
+                  label="Admission Quota" 
+                  name="quota"
+                  value={quota} 
+                  onChange={(e) => {
+                    setQuota(e.target.value);
+                    setAppNumber('');
+                  }} 
+                  required 
+                  options={[{ value: 'Government', label: 'Government Quota' }, { value: 'Management', label: 'Management Quota' }]} 
                 />
+                
+                <div className="relative">
+                  <Input
+                    label="Application Number"
+                    name="appNumber"
+                    type="text"
+                    placeholder={quota === 'Management' ? "5-digit number" : "6-digit number"}
+                    value={appNumber}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, ''); // only allow digits
+                      if (quota === 'Management') {
+                        if (val.length <= 5) setAppNumber(val);
+                      } else {
+                        if (val.length <= 6) setAppNumber(val);
+                      }
+                    }}
+                    required
+                    className={quota === 'Management' ? "pl-[90px]" : ""}
+                  />
+                  {quota === 'Management' && (
+                    <div className="absolute left-3 top-[34px] text-text-secondary pointer-events-none select-none font-mono">
+                      TRP2026/
+                    </div>
+                  )}
+                </div>
               </div>
               
               <AnimatePresence>
