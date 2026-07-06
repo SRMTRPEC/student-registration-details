@@ -63,9 +63,8 @@ export const ChangeStudentPasswordModal = ({ onClose, onSuccess }: ChangeStudent
     try {
       const appNumber = formData.application_number.trim();
       
-      const appNumberRegex = /^[a-zA-Z0-9]{6}$/;
-      if (!appNumberRegex.test(appNumber)) {
-        throw new Error("Application Number must be strictly 6 alphanumeric characters");
+      if (!appNumber) {
+        throw new Error("Application Number is required");
       }
       
       if (formData.new_password.length < 6) {
@@ -83,7 +82,7 @@ export const ChangeStudentPasswordModal = ({ onClose, onSuccess }: ChangeStudent
         throw new Error(`Application Number ${appNumber} not found!`);
       }
       
-      const hashedPassword = await hashPassword(formData.new_password.trim());
+      const hashedPassword = await hashPassword(formData.new_password);
       
       if (existing.password === hashedPassword) {
         throw new Error("The new password is the same as the current password.");

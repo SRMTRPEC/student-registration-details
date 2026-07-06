@@ -107,7 +107,7 @@ export const CreateStudentModal = ({ onClose, onSuccess }: CreateStudentModalPro
         throw new Error(`Application Number ${appNumber} already exists!`);
       }
 
-      const hashedPassword = await hashPassword(formData.password.trim());
+      const hashedPassword = await hashPassword(formData.password);
 
       // Save to student_profiles
       const { error } = await supabase.from('student_profiles').insert({
