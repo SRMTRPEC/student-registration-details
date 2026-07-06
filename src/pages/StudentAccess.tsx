@@ -89,13 +89,13 @@ export const StudentAccess = () => {
     }
 
     try {
-      const hashedPassword = await hashPassword(password);
+      const hashedPassword = await hashPassword(password.trim());
 
       if (isLogin) {
         const { data, error } = await supabase
           .from('student_profiles')
           .select('*')
-          .eq('application_number', appNumber.trim())
+          .ilike('application_number', appNumber.trim())
           .eq('password', hashedPassword)
           .single();
           
