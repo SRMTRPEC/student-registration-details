@@ -15,6 +15,7 @@ export const ChangeStudentPasswordModal = ({ onClose, onSuccess }: ChangeStudent
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [appNumberOptions, setAppNumberOptions] = useState<{value: string, label: string}[]>([]);
   const [formData, setFormData] = useState({
     application_number: '',
@@ -50,11 +51,13 @@ export const ChangeStudentPasswordModal = ({ onClose, onSuccess }: ChangeStudent
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    if (errorMsg) setErrorMsg(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
+    setErrorMsg(null);
     
     try {
       const appNumber = formData.application_number.trim();
@@ -95,7 +98,7 @@ export const ChangeStudentPasswordModal = ({ onClose, onSuccess }: ChangeStudent
       
       onSuccess();
     } catch (err: any) {
-      alert("Failed to change password: " + err.message);
+      setErrorMsg(err.message);
     } finally {
       setIsSaving(false);
     }
@@ -153,6 +156,10 @@ export const ChangeStudentPasswordModal = ({ onClose, onSuccess }: ChangeStudent
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
+              
+              {errorMsg && (
+                <p className="text-red-500 text-sm">{errorMsg}</p>
+              )}
               
               <div className="pt-4 flex justify-end gap-3 border-t border-white/10">
                 <Button type="button" variant="ghost" onClick={onClose}>
