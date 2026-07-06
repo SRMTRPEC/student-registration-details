@@ -103,11 +103,18 @@ export const StudentAccess = () => {
             .select('*')
             .ilike('application_number', actualAppNumber.trim())
           .eq('password', hashedPassword)
-          .single();
+          .maybeSingle();
           
-        if (error || !data) throw new Error("Invalid Application Number or Password");
-        
-      } else {
+          if (error) {
+            console.error("Supabase login error:", error);
+            throw new Error(`DB Error: ${error.message}`);
+          }
+          if (!data) {
+            console.log("No data returned for:", actualAppNumber.trim(), "with hash:", hashedPassword);
+            throw new Error(`Invalid Application Number or Password (Debug: No match found)`);
+          }
+          
+        } else {
         // Register flow
           const { data: existingUser } = await supabase
             .from('student_profiles')
