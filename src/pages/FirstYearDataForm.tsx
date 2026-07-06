@@ -344,9 +344,9 @@ export const FirstYearDataForm = () => {
     if (!isConfigured) {
       setTimeout(() => {
         if (adminEditApp) {
-          navigate(`/form/documents?adminEditApp=${encodeURIComponent(adminEditApp)}`);
+          navigate(`/admin/dashboard`);
         } else {
-          navigate('/form/documents');
+          navigate('/dashboard');
         }
       }, 1000);
       return;
@@ -363,11 +363,11 @@ export const FirstYearDataForm = () => {
         
       if (error) throw error;
       
-      if (adminEditApp) {
-        navigate(`/form/documents?adminEditApp=${encodeURIComponent(adminEditApp)}`);
-      } else {
-        navigate('/form/documents');
-      }
+        if (adminEditApp) {
+          navigate(`/admin/dashboard`);
+        } else {
+          navigate('/dashboard');
+        }
     } catch (err: any) {
       alert("Error submitting form: " + err.message);
     } finally {
