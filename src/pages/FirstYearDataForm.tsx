@@ -84,6 +84,9 @@ export const FirstYearDataForm = () => {
   const twelfthBlock = watch('twelfth_block');
 
   const tenthMarks = watch(['tenth_lang_mark', 'tenth_eng_mark', 'tenth_math_mark', 'tenth_sci_mark', 'tenth_soc_mark']);
+  const twelfthMarks = watch(['twelfth_lang_mark', 'twelfth_eng_mark', 'twelfth_sub1_mark', 'twelfth_sub2_mark', 'twelfth_sub3_mark', 'twelfth_sub4_mark']);
+  const twelfthBoard = watch('twelfth_board');
+  const icseSubjects = watch('icse_subjects');
 
   const tenthDistrictOptions = Object.keys(schoolData).sort().map(d => ({ value: d, label: d }));
   const tenthBlockOptions = tenthDistrict && schoolData[tenthDistrict] 
@@ -153,6 +156,24 @@ export const FirstYearDataForm = () => {
       setValue('tenth_total_marks', total.toString(), { shouldValidate: true });
     }
   }, [tenthMarksJson, setValue]);
+
+  // Auto-calculate 12th Total Marks
+  const twelfthMarksJson = JSON.stringify(twelfthMarks);
+  const icseSubjectsJson = JSON.stringify(icseSubjects);
+  
+  useEffect(() => {
+    if (twelfthBoard === 'ICSE') {
+      if (icseSubjects && icseSubjects.length > 0) {
+        const total = icseSubjects.reduce((sum: number, subj: any) => sum + (parseInt(subj.mark as string) || 0), 0);
+        setValue('twelfth_total_marks', total.toString(), { shouldValidate: true });
+      }
+    } else {
+      if (twelfthMarks.some(m => m !== undefined && m !== '')) {
+        const total = twelfthMarks.reduce((sum, mark) => sum + (parseInt(mark as string) || 0), 0);
+        setValue('twelfth_total_marks', total.toString(), { shouldValidate: true });
+      }
+    }
+  }, [twelfthMarksJson, icseSubjectsJson, twelfthBoard, setValue]);
 
   useEffect(() => {
     if (prevResidence.current !== undefined && prevResidence.current !== residenceType) {
@@ -569,6 +590,11 @@ export const FirstYearDataForm = () => {
                       <Input label="Mother's Name" {...register('mother_name')} error={errors.mother_name?.message} required />
                       <Input label="Mother's Mobile Number" maxLength={10} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('mother_mobile')} error={errors.mother_mobile?.message} required />
                       
+                      <Input label="Father's Occupation" {...register('father_occupation')} error={errors.father_occupation?.message} required />
+                      <Input label="Mother's Occupation" {...register('mother_occupation')} error={errors.mother_occupation?.message} required />
+                      
+                      <Select label="Single Parent" {...register('single_parent')} error={errors.single_parent?.message} required options={[{ value: 'Yes', label: 'Yes' }, { value: 'No', label: 'No' }]} className="md:col-span-2" />
+
                       <div className="col-span-1 md:col-span-2 border-t border-white/5 pt-4 mt-2">
                         <h4 className="text-sm font-medium text-text-secondary mb-3">Guardian Details (Optional)</h4>
                         <div className="grid md:grid-cols-2 gap-6">
@@ -576,13 +602,8 @@ export const FirstYearDataForm = () => {
                           <Input label="Guardian's Mobile Number" maxLength={10} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('guardian_mobile')} error={errors.guardian_mobile?.message} />
                         </div>
                       </div>
-
-                      <Select label="Single Parent" {...register('single_parent')} error={errors.single_parent?.message} required options={[{ value: 'Yes', label: 'Yes' }, { value: 'No', label: 'No' }]} />
                     </div>
-                  </div>              
-                  <Input label="Father's Occupation" {...register('father_occupation')} error={errors.father_occupation?.message} required />
-                  <Input label="Mother's Occupation" {...register('mother_occupation')} error={errors.mother_occupation?.message} required />
-                  
+                  </div>
                   <div className="md:col-span-2 border-t border-white/10 pt-6 mt-2">
                     <h3 className="text-lg font-medium text-white mb-4">Siblings Details</h3>
                     <div className="grid md:grid-cols-2 gap-6">
@@ -678,7 +699,7 @@ export const FirstYearDataForm = () => {
                         <SearchableSelect label="School" {...register('twelfth_school')} value={watch('twelfth_school')} error={errors.twelfth_school?.message} required options={twelfthSchoolOptions} disabled={!twelfthBlock} />
                       </div>
                       
-                      <Input label="12th Total Marks" maxLength={4} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('twelfth_total_marks')} error={errors.twelfth_total_marks?.message} required />
+                      <Input label="12th Total Marks" readOnly {...register('twelfth_total_marks')} error={errors.twelfth_total_marks?.message} required className="bg-primary/5 cursor-not-allowed opacity-80 md:col-span-2" />
                       
                       {watch('twelfth_board') === 'ICSE' ? (
                         <div className="col-span-1 md:col-span-2 space-y-4 border border-white/10 p-4 rounded-lg bg-white/5 mt-2">
@@ -715,7 +736,7 @@ export const FirstYearDataForm = () => {
                               <Input label="Language Mark" maxLength={3} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('twelfth_lang_mark')} error={errors.twelfth_lang_mark?.message} required />
                             )}
                             <Input label="English Mark" maxLength={3} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('twelfth_eng_mark')} error={errors.twelfth_eng_mark?.message} required />
-                            <Input label="Total Mark (Out of 600)" maxLength={4} onInput={(e) => e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')} {...register('twelfth_total_marks')} error={errors.twelfth_total_marks?.message} required />
+                            <Input label="Total Mark (Out of 600)" readOnly {...register('twelfth_total_marks')} error={errors.twelfth_total_marks?.message} required className="bg-primary/5 cursor-not-allowed opacity-80" />
                           </div>
                           
                           <div className="grid md:grid-cols-2 gap-x-8 gap-y-4 mb-4 p-4 bg-white/5 rounded-lg border border-white/5">
