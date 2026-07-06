@@ -103,16 +103,16 @@ export const firstYearDataSchema = z.object({
   twelfth_block: z.string().min(1, "12th Block is required"),
   twelfth_school: z.string().min(1, "12th School is required"),
   twelfth_total_marks: z.string().min(1, "Required").regex(/^\d+$/, "Must be a number"),
-  twelfth_lang_mark: z.string().optional(),
-  twelfth_eng_mark: z.string().optional(),
+  twelfth_lang_mark: z.string().optional().refine(val => !val || (parseInt(val) >= 0 && parseInt(val) <= 100), "Max 100"),
+  twelfth_eng_mark: z.string().optional().refine(val => !val || (parseInt(val) >= 0 && parseInt(val) <= 100), "Max 100"),
   twelfth_sub1_name: z.string().optional(),
-  twelfth_sub1_mark: z.string().optional(),
+  twelfth_sub1_mark: z.string().optional().refine(val => !val || (parseInt(val) >= 0 && parseInt(val) <= 100), "Max 100"),
   twelfth_sub2_name: z.string().optional(),
-  twelfth_sub2_mark: z.string().optional(),
+  twelfth_sub2_mark: z.string().optional().refine(val => !val || (parseInt(val) >= 0 && parseInt(val) <= 100), "Max 100"),
   twelfth_sub3_name: z.string().optional(),
-  twelfth_sub3_mark: z.string().optional(),
+  twelfth_sub3_mark: z.string().optional().refine(val => !val || (parseInt(val) >= 0 && parseInt(val) <= 100), "Max 100"),
   twelfth_sub4_name: z.string().optional(),
-  twelfth_sub4_mark: z.string().optional(),
+  twelfth_sub4_mark: z.string().optional().refine(val => !val || (parseInt(val) >= 0 && parseInt(val) <= 100), "Max 100"),
   icse_subjects: z.array(z.object({
     name: z.string().optional(),
     mark: z.string().optional()
@@ -178,6 +178,8 @@ export const firstYearDataSchema = z.object({
         }
         if (!subj.mark || !/^\d+$/.test(subj.mark)) {
           ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Valid mark is required", path: ["icse_subjects", index, "mark"] });
+        } else if (parseInt(subj.mark) > 100 || parseInt(subj.mark) < 0) {
+          ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Mark must be between 0 and 100", path: ["icse_subjects", index, "mark"] });
         }
       });
       calculatedTotal = data.icse_subjects.reduce((sum, subj) => sum + (parseInt(subj.mark || '0', 10) || 0), 0);
