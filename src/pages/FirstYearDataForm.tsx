@@ -796,33 +796,40 @@ export const FirstYearDataForm = () => {
             </motion.div>
           </AnimatePresence>
 
-          <div className="flex items-center justify-between mt-10 pt-6 border-t border-white/10">
-            <div>
-              {currentStep > 0 && (
-                <Button type="button" variant="ghost" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-                  <ArrowLeft className="w-4 h-4 mr-2" /> Back
-                </Button>
-              )}
-            </div>
-            
-            <div className="flex gap-4">
-              {(!isSubmittedForm || adminEditApp) && (
-                <Button type="button" variant="secondary" onClick={(e) => { e.preventDefault(); handleSaveDraft(watch()); }} isLoading={isSaving}>
-                  <Save className="w-4 h-4 mr-2" /> Save Draft
-                </Button>
-              )}
-              
-              {currentStep < STEPS.length - 1 ? (
-                <Button type="button" onClick={(e) => { e.preventDefault(); handleNext(); }}>
-                  Next Step <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              ) : (
-                (!isSubmittedForm || adminEditApp) && (
-                  <Button type="submit" isLoading={isSubmitting} className="bg-green-600 hover:bg-green-700 shadow-[0_0_15px_rgba(22,163,74,0.3)]">
-                    <CheckCircle className="w-4 h-4 mr-2" /> Submit Application
+          <div className="flex flex-col mt-10 pt-6 border-t border-white/10">
+            {Object.keys(errors).length > 0 && (
+              <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+                <strong>Cannot submit:</strong> Please fix errors in the following fields: {Object.keys(errors).join(', ')}
+              </div>
+            )}
+            <div className="flex items-center justify-between">
+              <div>
+                {currentStep > 0 && (
+                  <Button type="button" variant="ghost" onClick={(e) => { e.preventDefault(); handleBack(); }}>
+                    <ArrowLeft className="w-4 h-4 mr-2" /> Back
                   </Button>
-                )
-              )}
+                )}
+              </div>
+              
+              <div className="flex gap-4">
+                {(!isSubmittedForm || adminEditApp) && (
+                  <Button type="button" variant="secondary" onClick={(e) => { e.preventDefault(); handleSaveDraft(watch()); }} isLoading={isSaving}>
+                    <Save className="w-4 h-4 mr-2" /> Save Draft
+                  </Button>
+                )}
+                
+                {currentStep < STEPS.length - 1 ? (
+                  <Button type="button" onClick={(e) => { e.preventDefault(); handleNext(); }}>
+                    Next Step <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                ) : (
+                  (!isSubmittedForm || adminEditApp) && (
+                    <Button type="submit" isLoading={isSubmitting} className="bg-green-600 hover:bg-green-700 shadow-[0_0_15px_rgba(22,163,74,0.3)]">
+                      <CheckCircle className="w-4 h-4 mr-2" /> Submit Application
+                    </Button>
+                  )
+                )}
+              </div>
             </div>
           </div>
         </Card>
