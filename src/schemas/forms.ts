@@ -114,8 +114,8 @@ export const firstYearDataSchema = z.object({
   twelfth_sub4_name: z.string().optional(),
   twelfth_sub4_mark: z.string().optional(),
   icse_subjects: z.array(z.object({
-    name: z.string().min(1, "Subject name is required"),
-    mark: z.string().min(1, "Mark is required").regex(/^\d+$/, "Must be a number")
+    name: z.string().optional(),
+    mark: z.string().optional()
   })).optional(),
 }).superRefine((data, ctx) => {
   if (data.residence_type === 'Dayscholar') {
@@ -165,7 +165,21 @@ export const firstYearDataSchema = z.object({
   let calculatedTotal = 0;
   
   if (data.twelfth_board === 'ICSE') {
-    if (data.icse_subjects) {
+    if (!data.icse_subjects || data.icse_subjects.length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "At least one subject is required",
+        path: ["icse_subjects"],
+      });
+    } else {
+      data.icse_subjects.forEach((subj, index) => {
+        if (!subj.name || subj.name.trim() === '') {
+          ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Subject name is required", path: ["icse_subjects", index, "name"] });
+        }
+        if (!subj.mark || !/^\d+$/.test(subj.mark)) {
+          ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Valid mark is required", path: ["icse_subjects", index, "mark"] });
+        }
+      });
       calculatedTotal = data.icse_subjects.reduce((sum, subj) => sum + (parseInt(subj.mark || '0', 10) || 0), 0);
     }
   } else {
