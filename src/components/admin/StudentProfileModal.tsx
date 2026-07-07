@@ -298,6 +298,8 @@ export const StudentProfileModal = ({ applicationNumber, onClose, startInPrintMo
                         <Field label="Mother Tongue" value={firstYearData.mother_tongue} />
                         <Field label="Mother Name" value={firstYearData.mother_name} />
                         <Field label="Mother Mobile" value={firstYearData.mother_mobile} />
+                        <Field label="Father Name" value={firstYearData.father_name} />
+                        <Field label="Father Mobile" value={firstYearData.father_mobile} />
                         <Field label="Father's Occupation" value={firstYearData.father_occupation} />
                         <Field label="Mother's Occupation" value={firstYearData.mother_occupation} />
                         <Field label="Single Parent" value={firstYearData.single_parent} />
