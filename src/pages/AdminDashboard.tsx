@@ -469,7 +469,7 @@ export const AdminDashboard = () => {
                 {activeTab === 'submissions' && <th className="p-4 font-medium text-text-secondary">Status</th>}
                 {activeTab === 'registered' && <th className="p-4 font-medium text-text-secondary">Mobile</th>}
                 {activeTab === 'edit_requests' && <th className="p-4 font-medium text-text-secondary">Reason</th>}
-                <th className="p-4 font-medium text-text-secondary text-right">Actions</th>
+                <th className="p-4 font-medium text-text-secondary text-right sticky right-0 bg-[#111827] z-10 border-l border-white/5 shadow-[-10px_0_15px_-5px_rgba(0,0,0,0.3)]">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -497,7 +497,7 @@ export const AdminDashboard = () => {
                         {student.status}
                       </span>
                     </td>
-                    <td className="p-4 text-right whitespace-nowrap">
+                    <td className="p-4 text-right whitespace-nowrap sticky right-0 bg-[#111827] z-10 border-l border-white/5 shadow-[-10px_0_15px_-5px_rgba(0,0,0,0.3)]">
                       <Button 
                         variant="ghost" 
                         className="text-primary hover:text-white px-3 py-1 mr-2" 
@@ -542,7 +542,7 @@ export const AdminDashboard = () => {
                       <td className="p-4 text-yellow-500 italic max-w-[200px] truncate" title={student.student_name ? student.student_name.split('| EDIT_REQUEST:')[1] : ''}>
                         "{student.student_name ? student.student_name.split('| EDIT_REQUEST:')[1] : ''}"
                       </td>
-                      <td className="p-4 text-right whitespace-nowrap">
+                      <td className="p-4 text-right whitespace-nowrap sticky right-0 bg-[#111827] z-10 border-l border-white/5 shadow-[-10px_0_15px_-5px_rgba(0,0,0,0.3)]">
                         <Button 
                           className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 mr-2 h-8 text-sm" 
                           onClick={() => handleApproveEditRequest(student.application_number, student.student_name)}
@@ -580,7 +580,7 @@ export const AdminDashboard = () => {
                       <td className="p-4 text-text-secondary whitespace-nowrap">{student.created_at ? new Date(student.created_at).toLocaleDateString() : '-'}</td>
                       <td className="p-4">{student.course || '-'}</td>
                       <td className="p-4">{student.mobile_number || '-'}</td>
-                      <td className="p-4 text-right whitespace-nowrap">
+                      <td className="p-4 text-right whitespace-nowrap sticky right-0 bg-[#111827] z-10 border-l border-white/5 shadow-[-10px_0_15px_-5px_rgba(0,0,0,0.3)]">
                         <Button 
                           variant="ghost" 
                           className="text-primary hover:text-white px-3 py-1 mr-2" 
