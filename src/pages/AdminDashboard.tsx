@@ -519,8 +519,9 @@ export const AdminDashboard = () => {
                       >
                         <Edit className="w-4 h-4" />
                       </Button>
-                      <Button variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10 px-2 py-1" onClick={() => handleDelete(student.application_number)} title="Delete Record">
-                        <Trash2 className="w-4 h-4" />
+                      <Button variant="outline" className="text-red-400 border-red-500/30 hover:bg-red-500/20 px-3 py-1 bg-red-500/5" onClick={() => handleDelete(student.application_number)} title="Delete Record">
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete
                       </Button>
                     </td>
                   </tr>
@@ -595,8 +596,9 @@ export const AdminDashboard = () => {
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
-                        <Button variant="ghost" className="text-red-500 hover:text-red-400 hover:bg-red-500/10 px-2 py-1" onClick={() => handleDelete(student.application_number)} title="Delete Record">
-                          <Trash2 className="w-4 h-4" />
+                        <Button variant="outline" className="text-red-400 border-red-500/30 hover:bg-red-500/20 px-3 py-1 bg-red-500/5" onClick={() => handleDelete(student.application_number)} title="Delete Record">
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Delete
                         </Button>
                       </td>
                     </tr>
