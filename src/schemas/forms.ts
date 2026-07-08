@@ -20,6 +20,7 @@ export const firstYearDataSchema = z.object({
   gender: z.string().min(1, "Gender is required"),
   gender_other: z.string().optional(),
   blood_group: z.string().min(1, "Blood Group is required"),
+  custom_blood_group: z.string().optional(),
   mother_tongue: z.string().min(1, "Mother Tongue is required"),
   aadhaar_number: z.string().length(12, "Aadhaar must be 12 digits"),
   field_of_interest: z.string().optional(),

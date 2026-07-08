@@ -65,6 +65,7 @@ export const FirstYearDataForm = () => {
   const firstGraduate = watch('first_graduate');
   const programme = watch('programme');
   const gender = watch('gender');
+  const bloodGroup = watch('blood_group');
   const community = watch('community');
   const residenceType = watch('residence_type');
   const transportMode = watch('transport_mode');
@@ -318,6 +319,10 @@ export const FirstYearDataForm = () => {
             setValue('icse_subjects', JSON.parse(draftData.twelfth_sub1_name));
           } catch(e) {}
         }
+        if (draftData.blood_group && !['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].includes(draftData.blood_group)) {
+          setValue('blood_group', 'Other');
+          setValue('custom_blood_group', draftData.blood_group);
+        }
       } else {
         // No draft exists, fetch from student_profiles for pre-fill
         const { data: profileData } = await supabase
@@ -362,7 +367,7 @@ export const FirstYearDataForm = () => {
         'perm_address_line_1', 'perm_address_line_2', 'perm_village_city', 'perm_district', 'perm_state', 'perm_pincode',
         'is_same_address',
         ...(isSameAddress === 'No' ? ['comm_address_line_1', 'comm_address_line_2', 'comm_village_city', 'comm_district', 'comm_state', 'comm_pincode'] : []),
-        ...(residenceType === 'Dayscholar' ? ['transport_mode'] : []), ...(transportMode === 'College Bus' ? ['boarding_point'] : []), ...(residenceType === 'Outside Stay' ? ['outside_stay_details'] : []), ...(gender === 'Other' ? ['gender_other'] : [])];
+        ...(residenceType === 'Dayscholar' ? ['transport_mode'] : []), ...(transportMode === 'College Bus' ? ['boarding_point'] : []), ...(residenceType === 'Outside Stay' ? ['outside_stay_details'] : []), ...(gender === 'Other' ? ['gender_other'] : []), ...(bloodGroup === 'Other' ? ['custom_blood_group'] : [])];
     } else if (currentStep === 1) {
       fieldsToValidate = ['father_name', 'father_mobile', 'father_occupation', 'mother_name', 'mother_mobile', 'mother_occupation', 'single_parent', 'siblings_count'];
       
@@ -404,6 +409,10 @@ export const FirstYearDataForm = () => {
       payload.twelfth_sub1_name = JSON.stringify(payload.icse_subjects || []);
     }
     delete payload.icse_subjects;
+    if (payload.blood_group === 'Other' && payload.custom_blood_group) {
+      payload.blood_group = payload.custom_blood_group;
+    }
+    delete payload.custom_blood_group;
 
     try {
       const { error } = await supabase
@@ -432,6 +441,10 @@ export const FirstYearDataForm = () => {
       payload.twelfth_sub1_name = JSON.stringify(payload.icse_subjects || []);
     }
     delete payload.icse_subjects;
+    if (payload.blood_group === 'Other' && payload.custom_blood_group) {
+      payload.blood_group = payload.custom_blood_group;
+    }
+    delete payload.custom_blood_group;
 
     const isConfigured = !!import.meta.env.VITE_SUPABASE_URL && !!import.meta.env.VITE_SUPABASE_ANON_KEY;
     if (!isConfigured) {
@@ -536,7 +549,10 @@ export const FirstYearDataForm = () => {
                     <Input label="Specify Gender" {...register('gender_other')} error={errors.gender_other?.message} required className="md:col-span-2" />
                   )}
 
-                  <Select label="Blood Group" {...register('blood_group')} error={errors.blood_group?.message} required options={['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map(bg => ({value: bg, label: bg}))} />
+                  <Select label="Blood Group" {...register('blood_group')} error={errors.blood_group?.message} required options={['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-', 'Other'].map(bg => ({value: bg, label: bg}))} />
+                  {bloodGroup === 'Other' && (
+                    <Input label="Specify Blood Group" {...register('custom_blood_group')} error={errors.custom_blood_group?.message} required />
+                  )}
                   <Input label="Mother Tongue" {...register('mother_tongue')} error={errors.mother_tongue?.message} required />
                   
                   <Input label="Aadhaar Number" {...register('aadhaar_number')} error={errors.aadhaar_number?.message} required />
