@@ -137,6 +137,19 @@ export const AdminDashboard = () => {
   const generateExportData = async () => {
     setIsExporting(true);
     try {
+      if (activeTab === 'registered') {
+        const { data: profiles } = await supabase.from('student_profiles').select('*');
+        if (!profiles) return [];
+        return profiles.map(profile => ({
+          "Application Number": profile.application_number,
+          "Registration Date": new Date(profile.created_at).toLocaleString(),
+          "Student Name": profile.name,
+          "Email": profile.email,
+          "Mobile Number": profile.mobile_number,
+          "Course": profile.course
+        }));
+      }
+
       const { data: fydData } = await supabase.from('first_year_data').select('*');
       
       if (!fydData) return [];
@@ -319,8 +332,8 @@ export const AdminDashboard = () => {
           <div className="w-12 h-12 bg-blue-500/20 text-blue-500 rounded-full flex items-center justify-center mb-3">
             <Users className="w-6 h-6" />
           </div>
-          <p className="text-3xl font-bold">{stats.total}</p>
-          <p className="text-sm text-text-secondary">Total Registrations</p>
+          <p className="text-3xl font-bold">{activeTab === 'registered' ? registeredStudents.length : stats.total}</p>
+          <p className="text-sm text-text-secondary">{activeTab === 'registered' ? 'Total Profiles Registered' : 'Total Registrations'}</p>
         </Card>
         
         <Card className="flex flex-col items-center justify-center text-center p-6">
