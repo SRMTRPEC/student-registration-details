@@ -22,7 +22,8 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           <select
             id={selectId}
             ref={ref}
-            defaultValue=""
+            value={props.value !== undefined ? props.value : undefined}
+            defaultValue={props.value === undefined ? "" : undefined}
             className={`
               w-full bg-background/50 border rounded-lg px-4 py-3 text-text 
               appearance-none focus:outline-none focus:ring-2 

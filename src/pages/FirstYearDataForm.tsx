@@ -540,7 +540,7 @@ export const FirstYearDataForm = () => {
                   <Input label="Student Name" {...register('student_name')} error={errors.student_name?.message} required className="md:col-span-2" />
                   
                   <Select label="Degree" {...register('programme')} error={errors.programme?.message} required options={[{ value: 'B.E', label: 'B.E' }, { value: 'B.Tech', label: 'B.Tech' }, { value: 'M.E', label: 'M.E' }, { value: 'MBA', label: 'MBA' }]} />
-                  <Select label="Course/Department" {...register('course')} error={errors.course?.message} required options={programme && DEPARTMENT_MAP[programme] ? DEPARTMENT_MAP[programme] : []} disabled={!programme} />
+                  <Select label="Course/Department" {...register('course')} value={watch('course') || ''} error={errors.course?.message} required options={programme && DEPARTMENT_MAP[programme] ? DEPARTMENT_MAP[programme] : []} disabled={!programme} />
                   
                   <Select label="Admission Category" {...register('admission_category')} error={errors.admission_category?.message} required options={[{ value: 'Management Quota', label: 'Management Quota' }, { value: 'Government Quota (Counseling)', label: 'Government Quota (Counseling)' }]} />
                   <Input label="Application Number" {...register('application_number')} error={errors.application_number?.message} required readOnly className="bg-white/5 cursor-not-allowed text-text-secondary" />
@@ -750,7 +750,7 @@ export const FirstYearDataForm = () => {
                       {tenthState === 'Tamil Nadu' ? (
                         <>
                           <Select label="District" {...register('tenth_district')} error={errors.tenth_district?.message} required options={tenthDistrictOptions} />
-                          <Select label="Block" {...register('tenth_block')} error={errors.tenth_block?.message} required options={tenthBlockOptions} disabled={!tenthDistrict} />
+                          <Select label="Block" {...register('tenth_block')} value={watch('tenth_block') || ''} error={errors.tenth_block?.message} required options={tenthBlockOptions} disabled={!tenthDistrict} />
                           <div className="md:col-span-2">
                             <SearchableSelect label="School" {...register('tenth_school')} value={watch('tenth_school')} error={errors.tenth_school?.message} required options={tenthSchoolOptions} disabled={!tenthBlock} />
                           </div>
@@ -789,7 +789,7 @@ export const FirstYearDataForm = () => {
                       {twelfthState === 'Tamil Nadu' ? (
                         <>
                           <Select label="District" {...register('twelfth_district')} error={errors.twelfth_district?.message} required options={twelfthDistrictOptions} />
-                          <Select label="Block" {...register('twelfth_block')} error={errors.twelfth_block?.message} required options={twelfthBlockOptions} disabled={!twelfthDistrict} />
+                          <Select label="Block" {...register('twelfth_block')} value={watch('twelfth_block') || ''} error={errors.twelfth_block?.message} required options={twelfthBlockOptions} disabled={!twelfthDistrict} />
                           <div className="md:col-span-2">
                             <SearchableSelect label="School" {...register('twelfth_school')} value={watch('twelfth_school')} error={errors.twelfth_school?.message} required options={twelfthSchoolOptions} disabled={!twelfthBlock} />
                           </div>
