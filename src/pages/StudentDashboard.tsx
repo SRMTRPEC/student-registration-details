@@ -154,26 +154,7 @@ export const StudentDashboard = () => {
             <ExternalLink className="w-4 h-4 ml-2 group-hover:scale-110 transition-transform" />
           </Button>
 
-          <div className="mt-auto pt-4 border-t border-white/10">
-            <label className="flex items-center gap-3 cursor-pointer group">
-              <div className="relative flex items-center justify-center">
-                <input 
-                  type="checkbox" 
-                  className="w-5 h-5 appearance-none border-2 border-white/20 rounded-md checked:bg-green-500 checked:border-green-500 transition-colors peer"
-                  checked={form3Status === 'Completed'}
-                  onChange={(e) => {
-                    const checked = e.target.checked;
-                    setForm3Status(checked ? 'Completed' : 'Not Started');
-                    localStorage.setItem(`docs_submitted_${applicationNumber}`, checked ? 'true' : 'false');
-                  }}
-                />
-                <CheckCircle className="w-3.5 h-3.5 absolute text-black opacity-0 peer-checked:opacity-100 transition-opacity" />
-              </div>
-              <span className="text-sm text-text-secondary group-hover:text-white transition-colors">
-                I confirm I have uploaded my documents via the Google Form
-              </span>
-            </label>
-          </div>
+
         </Card>
       </div>
 
