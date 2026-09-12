@@ -1,7 +1,7 @@
 -- Create college_details table
 CREATE TABLE public.college_details (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  application_number TEXT UNIQUE NOT NULL REFERENCES public.first_year_data(application_number) ON DELETE CASCADE,
+  application_number TEXT UNIQUE NOT NULL REFERENCES public.student_profiles(application_number) ON DELETE CASCADE,
   roll_no TEXT NOT NULL,
   academic_year TEXT NOT NULL,
   section TEXT NOT NULL,
