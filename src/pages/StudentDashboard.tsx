@@ -5,12 +5,19 @@ import { FileText, Clock, ArrowRight, CheckCircle, ArrowLeft, ExternalLink } fro
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { supabase } from '../supabase/client';
+import { CollegeDetailsModal } from '../components/dashboard/CollegeDetailsModal';
 
 export const StudentDashboard = () => {
   const navigate = useNavigate();
   const [applicationNumber, setApplicationNumber] = useState<string | null>(null);
   const [form2Status, setForm2Status] = useState<'Not Started' | 'Pending' | 'Completed' | 'Edit Requested'>('Not Started');
   const [form3Status, setForm3Status] = useState<'Not Started' | 'Completed'>('Not Started');
+  const [collegeDetailsStatus, setCollegeDetailsStatus] = useState<'Not Started' | 'Completed'>('Not Started');
+  
+  const [studentName, setStudentName] = useState('');
+  const [studentDepartment, setStudentDepartment] = useState('');
+  
+  const [isCollegeDetailsModalOpen, setIsCollegeDetailsModalOpen] = useState(false);
   
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editReason, setEditReason] = useState('');
@@ -43,6 +50,17 @@ export const StudentDashboard = () => {
         if (docsSubmitted === 'true') {
           setForm3Status('Completed');
         }
+        const { data: profile } = await supabase.from('student_profiles').select('name, department').eq('application_number', fn).maybeSingle();
+        if (profile) {
+          setStudentName(profile.name);
+          setStudentDepartment(profile.department);
+        }
+
+        const { data: collegeDetails } = await supabase.from('college_details').select('id').eq('application_number', fn).maybeSingle();
+        if (collegeDetails) {
+          setCollegeDetailsStatus('Completed');
+        }
+
       } catch (err) {
         console.error("Error fetching status", err);
       }
@@ -91,7 +109,7 @@ export const StudentDashboard = () => {
         </p>
       </motion.div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-3 gap-6">
         {/* Form 2 Card */}
         <Card className="flex flex-col">
           <div className="flex items-start justify-between mb-6">
@@ -156,7 +174,42 @@ export const StudentDashboard = () => {
 
 
         </Card>
+
+        {/* College Details Card */}
+        <Card className="flex flex-col">
+          <div className="flex items-start justify-between mb-6">
+            <div className="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center">
+              <FileText className="w-6 h-6" />
+            </div>
+            <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${
+              collegeDetailsStatus === 'Completed' ? 'bg-green-500/10 text-green-500 border-green-500/20' : 
+              'bg-white/5 text-text-secondary border-white/10'
+            }`}>
+              {collegeDetailsStatus === 'Completed' ? <CheckCircle className="w-3.5 h-3.5" /> : <Clock className="w-3.5 h-3.5" />} 
+              {collegeDetailsStatus}
+            </div>
+          </div>
+          
+          <h3 className="text-xl font-bold mb-2">College Details</h3>
+          <p className="text-sm text-text-secondary mb-8 flex-1">
+            Provide your Roll No, Year, and Section details for college records.
+          </p>
+          
+          <Button onClick={() => setIsCollegeDetailsModalOpen(true)} className="w-full bg-blue-600 hover:bg-blue-700 text-white mb-6 group">
+            {collegeDetailsStatus === 'Completed' ? 'View/Edit Details' : 'Fill Details'}
+            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+          </Button>
+        </Card>
       </div>
+
+      <CollegeDetailsModal 
+        isOpen={isCollegeDetailsModalOpen}
+        onClose={() => setIsCollegeDetailsModalOpen(false)}
+        applicationNumber={applicationNumber}
+        studentName={studentName}
+        department={studentDepartment}
+        onSuccess={() => setCollegeDetailsStatus('Completed')}
+      />
 
       {isEditModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
