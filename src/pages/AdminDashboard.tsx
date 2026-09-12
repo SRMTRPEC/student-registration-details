@@ -139,22 +139,37 @@ export const AdminDashboard = () => {
     try {
       if (activeTab === 'registered') {
         const { data: profiles } = await supabase.from('student_profiles').select('*');
+        const { data: collegeDetails } = await supabase.from('college_details').select('*');
+        
         if (!profiles) return [];
-        return profiles.map(profile => ({
+        
+        const collegeMap = new Map(collegeDetails?.map(c => [c.application_number, c]) || []);
+        
+        return profiles.map(profile => {
+          const cd = collegeMap.get(profile.application_number);
+          return {
           "Application Number": profile.application_number,
           "Registration Date": new Date(profile.created_at).toLocaleString(),
           "Student Name": profile.name,
           "Email": profile.email,
           "Mobile Number": profile.mobile_number,
-          "Course": profile.course
-        }));
+          "Course": profile.course,
+          "College Roll No": cd?.roll_no || "",
+          "College Year": cd?.academic_year || "",
+          "College Section": cd?.section || ""
+        };
+      });
       }
 
       const { data: fydData } = await supabase.from('first_year_data').select('*');
+      const { data: collegeDetails } = await supabase.from('college_details').select('*');
       
       if (!fydData) return [];
 
+      const collegeMap = new Map(collegeDetails?.map(c => [c.application_number, c]) || []);
+
       return fydData.map(fyd => {
+        const cd = collegeMap.get(fyd.application_number);
         return {
           "Folder Number": fyd.application_number,
           "Status": fyd.status,
@@ -254,7 +269,11 @@ export const AdminDashboard = () => {
           "Sibling 5 Name": fyd.siblings?.[4]?.name || "",
           "Sibling 5 Education": fyd.siblings?.[4]?.education || "",
           "Sibling 5 Occupation": fyd.siblings?.[4]?.occupation || "",
-          "Date of Doc Submission": fyd.date_of_document_submission
+          "Date of Doc Submission": fyd.date_of_document_submission,
+          
+          "College Roll No": cd?.roll_no || "",
+          "College Year": cd?.academic_year || "",
+          "College Section": cd?.section || ""
         };
       });
     } catch (err) {

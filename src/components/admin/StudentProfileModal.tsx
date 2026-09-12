@@ -17,6 +17,7 @@ export const StudentProfileModal = ({ applicationNumber, onClose, startInPrintMo
   const [isLoading, setIsLoading] = useState(true);
   const [firstYearData, setFirstYearData] = useState<any>(null);
   const [documentsData, setDocumentsData] = useState<any[]>([]);
+  const [collegeData, setCollegeData] = useState<any>(null);
   const [isPrinting, setIsPrinting] = useState(startInPrintMode);
   const [viewMode, setViewMode] = useState(initialViewMode);
 
@@ -74,6 +75,11 @@ export const StudentProfileModal = ({ applicationNumber, onClose, startInPrintMo
         }
         
         setDocumentsData(dData || []);
+        
+        const { data: cData } = await supabase.from('college_details').select('*').eq('application_number', applicationNumber).maybeSingle();
+        if (cData) {
+          setCollegeData(cData);
+        }
       } catch (err) {
         console.error("Error fetching profile", err);
       } finally {
@@ -413,7 +419,19 @@ export const StudentProfileModal = ({ applicationNumber, onClose, startInPrintMo
                       </div>
                     </div>
 
-
+                    {/* College Details Section */}
+                    {collegeData && (
+                      <div className="mt-8 border-t border-white/10 pt-6">
+                        <div className="bg-blue-500/10 border border-blue-500/20 p-4 rounded-lg mb-4">
+                          <h3 className="text-xl font-bold text-blue-400">College Details</h3>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ml-2">
+                          <Field label="Roll No" value={collegeData.roll_no} />
+                          <Field label="Year" value={collegeData.academic_year} />
+                          <Field label="Section" value={collegeData.section} />
+                        </div>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
